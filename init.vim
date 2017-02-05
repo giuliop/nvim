@@ -1,10 +1,13 @@
 " Plugin ,managed via vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
-            Plug 'giuliop/vim' , {'rtp': 'my-vim-bundle/'}
-            Plug 'scrooloose/nerdtree'
-            Plug 'tpope/vim-surround'
-            Plug 'ctrlpvim/ctrlp.vim'
-            Plug 'scrooloose/nerdcommenter'
+    Plug 'giuliop/vim' , {'dir': '~/.vim/my-vim-bundle'}
+    Plug 'scrooloose/nerdtree'
+    Plug 'tpope/vim-surround'
+    Plug 'tpope/vim-repeat'
+    Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'scrooloose/nerdcommenter'
+    " For Clojure
+    Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 call plug#end()
 
 " General
@@ -12,7 +15,7 @@ call plug#end()
     set mouse=""                    "no mouse mode"
 
 " System
-    set shortmess+=filmnrxoOtT      " abbreviated messages (no 'hit enter') use :file! to see full msg
+    "set shortmess+=filmnrxoOtT      " abbreviated messages (no 'hit enter') use :file! to see full msg
     set viewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
     set hidden                      " allow buffer switching without saving
 
@@ -28,11 +31,13 @@ call plug#end()
     set textwidth=0                 " Hard-wrap long lines as you type them
 
     " Remove trailing whitespaces and ^M chars
-    autocmd FileType javascript,python,clojure,clojurescript autocmd BufWritePre <buffer> call StripTrailingWhitespace()
+    autocmd FileType javascript,python,clojure,clojurescript,haskell autocmd BufWritePre <buffer> call StripTrailingWhitespace()
     "No auto comments
     autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Vim UI
+    :let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1    "make the cursor a pipe in insert-mode, and a block in normal-mode
+
     set title                       " set the terminal title
     set showmode                    " display the current mode
     set cursorline                  " highlight current line
@@ -53,13 +58,14 @@ call plug#end()
     set nojoinspaces                " Prevents inserting two spaces after punctuation on a join (J)
     set showmatch                   " show matching brackets/parenthesis
     set winminheight=0              " windows can be 0 line high
+    set ignorecase                  " case insensitive search
     set smartcase                   " case sensitive when uc present
     set wildmode=list:longest,full  " command <Tab> completion, list matches, then longest common part, then all.
     set whichwrap=b,s,h,l,<,>,[,]   " backspace and cursor keys wrap to
     set scrolljump=3                " lines to scroll when cursor leaves screen
     set scrolloff=3                 " minimum lines to keep above and below cursor
     set foldenable                  " auto fold code
-    set list                        " show char listed below in listchars
+    "set list                        " show char listed below in listchars
     set gdefault                    " apply global substitution to all occurrences in lines
     set splitright                  " new windows opens to the right
     set splitbelow                  " new windows opens to the right
@@ -67,6 +73,7 @@ call plug#end()
 
 " Graphics
 
+    set termguicolors
     set background=dark
     silent! colorscheme giulius
 
@@ -82,7 +89,9 @@ call plug#end()
     nnoremap H ^
     nnoremap L $
 
-    set pastetoggle=<leader>-           " pastetoggle (sane indentation on pastes)
+    set pastetoggle=<F2>           " pastetoggle (sane indentation on pastes)
+    " see syntax defintion under cursor
+    map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
     " Some extra time savers
     nnoremap ; :
@@ -144,9 +153,6 @@ call plug#end()
     " Toggle line numbers and fold column for easy copying
     nnoremap <leader>3 :setlocal norelativenumber!<CR>:set foldcolumn=0<CR>
 
-    " to save and open current file
-    nnoremap <leader>o :w<CR>:!open<space>%<CR>
-
     " to open new vertical split with new file
     nnoremap <leader>n :vne<CR>
 
@@ -174,10 +180,9 @@ call plug#end()
 
     " ctrlp
         let g:ctrlp_working_path_mode = 0
-        let g:ctrlp_map = '<c-t>'
-        nmap <silent> <C-t> :CtrlPMixed<CR>
+        nnoremap <leader>p :CtrlPMixed<CR>
+        nnoremap <leader>b :CtrlPBuffer<CR>
         let g:ctrlp_show_hidden = 1
-        set wildignore+=*/..*
         let g:ctrlp_custom_ignore = {
                     \ 'dir':  '\v[\/]\.(git|hg|svn)$',
                     \ 'file': '\v\.(swp|so|zip)$', }
