@@ -173,6 +173,10 @@ call plug#end()
     noremap <leader>q :q<CR>
     noremap <leader>w :bw<CR>
 
+    " [ and ] to add blank lines in normal mode
+    noremap <silent><leader>[ :set paste<CR>m`O<Esc>``:set nopaste<CR>
+    noremap <silent><leader>] :set paste<CR>m`o<Esc>``:set nopaste<CR>
+
 " Plugins
 
     " Ctags
