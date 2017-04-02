@@ -95,6 +95,7 @@ call plug#end()
 
     " Some extra time savers
     nnoremap ; :
+    nnoremap : ;
     imap <C-c> <ESC>
     " No more help staring by mistake
     noremap <F1> <ESC>
@@ -170,12 +171,15 @@ call plug#end()
     nnoremap <leader>s <C-w>s<C-w>l
 
     " q to quit, w to close buffer
-    noremap <leader>q :q<CR>
-    noremap <leader>w :bw<CR>
+    nnoremap <leader>q :q<CR>
+    nnoremap <leader>w :bw<CR>
 
     " [ and ] to add blank lines in normal mode
-    noremap <silent><leader>[ :set paste<CR>m`O<Esc>``:set nopaste<CR>
-    noremap <silent><leader>] :set paste<CR>m`o<Esc>``:set nopaste<CR>
+    nnoremap <silent><leader>[ :set paste<CR>m`O<Esc>``:set nopaste<CR>
+    nnoremap <silent><leader>] :set paste<CR>m`o<Esc>``:set nopaste<CR>
+
+    " t to run tests (for now just for Clojure with fireplace plugin
+    nnoremap <leader>t :w<CR>:Require!<CR>:RunTests<CR>
 
 " Plugins
 
