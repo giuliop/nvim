@@ -18,10 +18,7 @@ call plug#end()
     "set shortmess+=filmnrxoOtT      " abbreviated messages (no 'hit enter') use :file! to see full msg
     set viewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
     set hidden                      " allow buffer switching without saving
-
-    " Setting up the directories
-    set backup                      " backups are nice
-    set undofile                    "so is persistent undo
+    set undofile                    " persistent undo is nice
 
 " Formatting
     set shiftwidth=4                " use indents of 4 spaces
@@ -143,6 +140,10 @@ call plug#end()
     " Ctrl+s to save and if needed de-highlight search and select autocomplete
     noremap <C-s> :noh<CR>:w<CR>
     inoremap <C-s> <ESC>:noh<CR>:w<CR>
+    
+    " Alt-A and Alt-x to increment and decrement numbers
+    :nnoremap <A-a> <C-a>
+    :nnoremap <A-x> <C-x>
 
 "Leader mappings"
     let mapleader = "\<SPACE>"
