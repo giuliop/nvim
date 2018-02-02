@@ -24,7 +24,7 @@ call plug#end()
     set shiftwidth=4                " use indents of 4 spaces
     set expandtab                   " tabs are spaces, not tabs
     set tabstop=4                   " an indentation every four columns
-    set softtabstop=4               " let backspacehhhdelete indent
+    set softtabstop=4               " let backspace delete indent
     set textwidth=0                 " Hard-wrap long lines as you type them
 
     " Remove trailing whitespaces and ^M chars
@@ -74,8 +74,8 @@ call plug#end()
     set background=dark
     silent! colorscheme giulius
 
-    " change color after column 85
-    let &colorcolumn=join(range(85,300),",")
+    " change color after column 90
+    let &colorcolumn=join(range(90,300),",")
 
 " Key (re)Mappings
 
@@ -211,6 +211,9 @@ call plug#end()
 
         " HTML tabs to two spaces, no wrap, no expand tab to spaces, no show whitespaces
         autocmd FileType html setlocal noexpandtab shiftwidth=2 tabstop=2 softtabstop=2 nowrap nolist
+
+        " For C indent on 2 cols
+        autocmd FileType c setlocal shiftwidth=2 tabstop=2 softtabstop=2
 
         " When init.vim is edited, reload it
         autocmd! bufwritepost init.vim source ~/.config/nvim/init.vim
