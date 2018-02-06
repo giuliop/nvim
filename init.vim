@@ -213,7 +213,7 @@ call plug#end()
         autocmd FileType html setlocal noexpandtab shiftwidth=2 tabstop=2 softtabstop=2 nowrap nolist
 
         " For C indent on 2 cols
-        autocmd FileType c setlocal shiftwidth=2 tabstop=2 softtabstop=2
+        autocmd FileType c setlocal shiftwidth=2 tabstop=2 softtabstop=2 noexpandtab
 
         " When init.vim is edited, reload it
         autocmd! bufwritepost init.vim source ~/.config/nvim/init.vim
