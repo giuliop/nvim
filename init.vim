@@ -1,6 +1,6 @@
 " Plugin ,managed via vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
-    Plug 'giuliop/vim' , {'dir': '~/.config/nvim/my-vim-bundle'}
+    Plug '~/.config/nvim/my-vim-bundle'
     Plug 'scrooloose/nerdtree'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-repeat'

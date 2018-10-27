@@ -1,4 +1,0 @@
-My VIM configuration files
-
-I use Vundle to manage plugins (as per vimrc.bundles), use vimrc for general settings
-and put my scripts and customizations in my-vim-bundle
