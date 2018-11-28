@@ -14,6 +14,9 @@ call plug#end()
     set modelines=0                 "will not use modelines
     set mouse=""                    "no mouse mode"
 
+    "line below commented out because not working in nvim
+    "set t_ti= t_te=                "don't delete screen on exit
+
 " System
     "set shortmess+=filmnrxoOtT      " abbreviated messages (no 'hit enter') use :file! to see full msg
     set viewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
