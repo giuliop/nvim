@@ -17,6 +17,9 @@ call plug#end()
     set mouse=""                    "no mouse mode
     set visualbell                  "no beep
 
+    "line below commented out because not working in nvim
+    "set t_ti= t_te=                "don't delete screen on exit
+
 " System
     "set shortmess+=filmnrxoOtT      " abbreviated messages (no 'hit enter') use :file! to see full msg
     set viewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
