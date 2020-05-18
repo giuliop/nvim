@@ -207,7 +207,8 @@ hi Special      guifg=#af87af
 "hi Statement    guifg=#d75f5f
 hi Statement    guifg=#5fafd7
 hi Identifier   guifg=#87af5f
-hi Type         guifg=#87af5f
+"hi Type         guifg=#87af5f
+hi Type         guifg=#af875f
 hi Title        guifg=#bcbcbc
 
 " ----------------------------------------------------------------------------
@@ -221,6 +222,8 @@ hi htmlTagName  guifg=#5fafd7
 hi htmlSpecialChar guifg=#d75f5f
 
 hi javaScriptFuncArg guifg=#87af5f
+
+hi rustEnumVariant guifg=#cb4343
 " ----------------------------------------------------------------------------
 " Highlighting:
 " ----------------------------------------------------------------------------
