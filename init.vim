@@ -8,11 +8,14 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'scrooloose/nerdcommenter'
     " For Clojure
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+    " For Rust
+    Plug 'rust-lang/rust.vim', { 'for': 'rust' }
 call plug#end()
 
 " General
     set modelines=0                 "will not use modelines
-    set mouse=""                    "no mouse mode"
+    set mouse=""                    "no mouse mode
+    set visualbell                  "no beep
 
 " System
     "set shortmess+=filmnrxoOtT      " abbreviated messages (no 'hit enter') use :file! to see full msg
@@ -30,7 +33,7 @@ call plug#end()
     " Remove trailing whitespaces and ^M chars
     autocmd FileType javascript,python,clojure,clojurescript,haskell autocmd BufWritePre <buffer> call StripTrailingWhitespace()
     "No auto comments
-    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    "autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Vim UI
     :let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1    "make the cursor a pipe in insert-mode, and a block in normal-mode
@@ -203,6 +206,10 @@ call plug#end()
         let NERDTreeQuitOnOpen=1
         let NERDTreeShowHidden=1
         let NERDTreeShowLineNumbers=1
+
+    " rust.vim
+        " RustFmt on save
+        let g:rustfmt_autosave = 1
 
 " Automatic commands
 
