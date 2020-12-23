@@ -224,6 +224,8 @@ hi htmlSpecialChar guifg=#d75f5f
 hi javaScriptFuncArg guifg=#87af5f
 
 hi rustEnumVariant guifg=#cb4343
+"hi! link rustStorage Statement
+hi! link rustSigil Statement
 " ----------------------------------------------------------------------------
 " Highlighting:
 " ----------------------------------------------------------------------------

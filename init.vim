@@ -6,6 +6,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'tpope/vim-repeat'
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'scrooloose/nerdcommenter'
+    Plug 'scrooloose/syntastic'
     " For Clojure
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
     " For Rust
@@ -36,7 +37,7 @@ call plug#end()
     " Remove trailing whitespaces and ^M chars
     autocmd FileType javascript,python,clojure,clojurescript,haskell autocmd BufWritePre <buffer> call StripTrailingWhitespace()
     "No auto comments
-    "autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Vim UI
     :let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1    "make the cursor a pipe in insert-mode, and a block in normal-mode
@@ -124,9 +125,6 @@ call plug#end()
     vnoremap < <gv
     vnoremap > >gv
 
-    " map <leader>ff to display all lines with keyword under cursor and ask which one to jump to
-    nnoremap <leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
-
     " Easier horizontal scrolling
     noremap zl zL
     noremap zh zH
@@ -150,6 +148,7 @@ call plug#end()
     " Alt-A and Alt-x to increment and decrement numbers
     :nnoremap <A-a> <C-a>
     :nnoremap <A-x> <C-x>
+
 
 "Leader mappings"
     let mapleader = "\<SPACE>"
@@ -188,6 +187,13 @@ call plug#end()
     " t to run tests (for now just for Clojure with fireplace plugin
     nnoremap <leader>t :w<CR>:Require!<CR>:RunTests<CR>
 
+    " ff to display all lines with keyword under cursor and ask where jump to
+    nnoremap <leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+
+    " enter to add a blank lime above and type into it with a blank line below
+    nnoremap <leader><CR> <up>o<ESC><up>o
+    inoremap <leader><CR> <ESC><up>o<ESC><up>o
+
 " Plugins
 
     " Ctags
@@ -213,6 +219,23 @@ call plug#end()
     " rust.vim
         " RustFmt on save
         let g:rustfmt_autosave = 1
+
+    " syntastic
+        set statusline+=%#warningmsg#
+        set statusline+=%{SyntasticStatuslineFlag()}
+        set statusline+=%*
+
+        let g:syntastic_mode_map = {
+                \ "mode": "active",
+                \ "active_filetypes": [],
+                \ "passive_filetypes": [] }
+
+        let g:syntastic_always_populate_loc_list = 1
+        let g:syntastic_auto_loc_list = 0
+        let g:syntastic_check_on_open = 1
+        let g:syntastic_check_on_wq = 0
+
+        nnoremap <leader>s :SyntasticCheck<CR>
 
 " Automatic commands
 
