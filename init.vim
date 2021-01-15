@@ -194,6 +194,9 @@ call plug#end()
     nnoremap <leader><CR> <up>o<ESC><up>o
     inoremap <leader><CR> <ESC><up>o<ESC><up>o
 
+    " close '{' one line below and add newline
+    inoremap {{ {<CR>}<ESC>O
+
 " Plugins
 
     " Ctags
