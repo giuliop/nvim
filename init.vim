@@ -11,6 +11,8 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
     " For Rust
     Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+    " For HTML
+    Plug 'alvan/vim-closetag'
 call plug#end()
 
 " General
@@ -37,7 +39,7 @@ call plug#end()
     " Remove trailing whitespaces and ^M chars
     autocmd FileType javascript,python,clojure,clojurescript,haskell autocmd BufWritePre <buffer> call StripTrailingWhitespace()
     "No auto comments
-    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    "autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Vim UI
     :let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1    "make the cursor a pipe in insert-mode, and a block in normal-mode
@@ -174,7 +176,7 @@ call plug#end()
     nnoremap <leader>v <C-w>v<C-w>l
 
     " open horizontal split
-    nnoremap <leader>s <C-w>s<C-w>l
+    nnoremap <leader>i <C-w>s<C-w>l
 
     " q to quit, w to close buffer
     nnoremap <leader>q :q<CR>
@@ -192,7 +194,7 @@ call plug#end()
 
     " enter to add a blank lime above and type into it with a blank line below
     nnoremap <leader><CR> <up>o<ESC><up>o
-    inoremap <leader><CR> <ESC><up>o<ESC><up>o
+    "inoremap <leader><CR> <ESC><up>o<ESC><up>o
 
     " close '{' one line below and add newline
     inoremap {{ {<CR>}<ESC>O
@@ -248,8 +250,8 @@ call plug#end()
         " HTML tabs to two spaces, no wrap, no expand tab to spaces, no show whitespaces
         autocmd FileType html setlocal noexpandtab shiftwidth=2 tabstop=2 softtabstop=2 nowrap nolist
 
-        " For C indent on 2 cols
-        autocmd FileType c setlocal shiftwidth=2 tabstop=2 softtabstop=2 noexpandtab
+        " For C, javascript, typescript, css indent on 2 cols
+        autocmd FileType c,javascript,css,typescript setlocal shiftwidth=2 tabstop=2 softtabstop=2 noexpandtab
 
         " When init.vim is edited, reload it
         autocmd! bufwritepost init.vim source ~/.config/nvim/init.vim
@@ -257,6 +259,8 @@ call plug#end()
         " Jump to last cursor position when opening file
         :au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
+        " Set comment options for teal files
+         autocmd BufNewFile,BufRead *.teal setlocal comments+=://
 
 " Functions
 
