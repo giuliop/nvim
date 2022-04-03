@@ -7,6 +7,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'scrooloose/nerdcommenter'
     Plug 'scrooloose/syntastic'
+    Plug 'arcticicestudio/nord-vim'
     " For Clojure
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
     " For Rust
@@ -81,7 +82,7 @@ call plug#end()
 
     set termguicolors
     set background=dark
-    silent! colorscheme giulius
+    silent! colorscheme nord
 
     " change color after column 90
     let &colorcolumn=join(range(90,300),",")
