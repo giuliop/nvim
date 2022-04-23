@@ -8,6 +8,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'scrooloose/nerdcommenter'
     Plug 'scrooloose/syntastic'
     Plug 'arcticicestudio/nord-vim'
+    Plug 'ericbn/vim-solarized'
     " For Clojure
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
     " For Rust
@@ -81,8 +82,15 @@ call plug#end()
 " Graphics
 
     set termguicolors
-    set background=dark
-    silent! colorscheme nord
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+    if $ITERM_PROFILE == "light"
+        set background=light
+        silent! colorscheme solarized
+    else
+        set background=dark
+        silent! colorscheme nord
+    endif
 
     " change color after column 90
     let &colorcolumn=join(range(90,300),",")
