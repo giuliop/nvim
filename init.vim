@@ -86,7 +86,7 @@ call plug#end()
 
     if $ITERM_PROFILE == "light"
         set background=light
-        silent! colorscheme solarized
+        silent! colorscheme selenized
     else
         set background=dark
         silent! colorscheme nord
