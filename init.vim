@@ -9,12 +9,11 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'scrooloose/syntastic'
     Plug 'arcticicestudio/nord-vim'
     Plug 'ericbn/vim-solarized'
-    " For Clojure
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-    " For Rust
     Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-    " For HTML
-    Plug 'alvan/vim-closetag'
+    Plug 'alvan/vim-closetag', { 'for': 'html' }
+    Plug 'aldur/vim-algorand-teal', { 'for': 'teal' }
+    Plug 'eslint/eslint', { 'for': 'javascript' }
 call plug#end()
 
 " General
@@ -53,10 +52,11 @@ call plug#end()
     set showcmd                     " show partial commands in status line and selected characters/lines in visual mode
 
     " Statusline broken down into easily includeable segments
-    set statusline=%<%f\            " Filename
-    set statusline+=%w%h%m%r        " Options
-    set statusline+=\ [%{&ff}/%Y]   " filetype
-    set statusline+=\ [%{getcwd()}] " current dir
+    set statusline=\ %F            " Filename with dir
+    "set statusline=\ %f           " Filename only
+    set statusline+=\ %w%h%m%r     " Options
+    set statusline+=\ [%{&ff}/%Y]  " filetype
+    "set statusline+=[%{getcwd()}] " current dir
     set statusline+=%#warningmsg#
     set statusline+=%*
     set statusline+=%=%-15.(%l,%c%V%)\ %p%%  " Right aligned file navigation info
@@ -93,7 +93,7 @@ call plug#end()
     endif
 
     " change color after column 90
-    let &colorcolumn=join(range(90,300),",")
+    "let &colorcolumn=join(range(90,300),",")
 
 " Key (re)Mappings
 
