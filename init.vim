@@ -259,9 +259,6 @@ call plug#end()
         " HTML tabs to two spaces, no wrap, no expand tab to spaces, no show whitespaces
         autocmd FileType html setlocal noexpandtab shiftwidth=2 tabstop=2 softtabstop=2 nowrap nolist
 
-        " For C, javascript, typescript, css indent on 2 cols
-        autocmd FileType c,javascript,css,typescript setlocal shiftwidth=2 tabstop=2 softtabstop=2 noexpandtab
-
         " When init.vim is edited, reload it
         autocmd! bufwritepost init.vim source ~/.config/nvim/init.vim
 
