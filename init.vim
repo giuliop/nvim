@@ -1,14 +1,18 @@
 " Plugin ,managed via vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
     Plug '~/.config/nvim/my-vim-bundle'
-    Plug 'scrooloose/nerdtree'
+    Plug 'preservim/nerdtree'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-repeat'
+    Plug 'tpope/vim-unimpaired'
     Plug 'ctrlpvim/ctrlp.vim'
-    Plug 'scrooloose/nerdcommenter'
-    Plug 'scrooloose/syntastic'
+    Plug 'preservim/nerdcommenter'
+    Plug 'dense-analysis/ale'
     Plug 'arcticicestudio/nord-vim'
     Plug 'ericbn/vim-solarized'
+    Plug 'github/copilot.vim'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
     Plug 'rust-lang/rust.vim', { 'for': 'rust' }
     Plug 'alvan/vim-closetag', { 'for': 'html' }
@@ -21,12 +25,7 @@ call plug#end()
     set mouse=""                    "no mouse mode
     set visualbell                  "no beep
 
-    "line below commented out because not working in nvim
-    "set t_ti= t_te=                "don't delete screen on exit
-
 " System
-    "set shortmess+=filmnrxoOtT      " abbreviated messages (no 'hit enter') use :file! to see full msg
-    set viewoptions=folds,options,cursor,unix,slash " better unix / windows compatibility
     set hidden                      " allow buffer switching without saving
     set undofile                    " persistent undo is nice
 
@@ -39,32 +38,13 @@ call plug#end()
 
     " Remove trailing whitespaces and ^M chars
     autocmd FileType javascript,python,clojure,clojurescript,haskell autocmd BufWritePre <buffer> call StripTrailingWhitespace()
-    "No auto comments
-    "autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    " Comment out following for no auto comments
+    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Vim UI
-    :let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1    "make the cursor a pipe in insert-mode, and a block in normal-mode
-
-    set title                       " set the terminal title
-    set showmode                    " display the current mode
     set cursorline                  " highlight current line
-    set ruler                       " show the ruler
-    set showcmd                     " show partial commands in status line and selected characters/lines in visual mode
-
-    " Statusline broken down into easily includeable segments
-    set statusline=\ %F            " Filename with dir
-    "set statusline=\ %f           " Filename only
-    set statusline+=\ %w%h%m%r     " Options
-    set statusline+=\ [%{&ff}/%Y]  " filetype
-    "set statusline+=[%{getcwd()}] " current dir
-    set statusline+=%#warningmsg#
-    set statusline+=%*
-    set statusline+=%=%-15.(%l,%c%V%)\ %p%%  " Right aligned file navigation info
-
-    set relativenumber              " instead of absolute numbers
-    set linespace=0                 " No extra spaces between rows
+    set relativenumber              " show relative line numbers
     set nojoinspaces                " Prevents inserting two spaces after punctuation on a join (J)
-    set showmatch                   " show matching brackets/parenthesis
     set winminheight=0              " windows can be 0 line high
     set ignorecase                  " case insensitive search
     set smartcase                   " case sensitive when uc present
@@ -73,10 +53,7 @@ call plug#end()
     set scrolljump=3                " lines to scroll when cursor leaves screen
     set scrolloff=3                 " minimum lines to keep above and below cursor
     set foldenable                  " auto fold code
-    "set list                        " show char listed below in listchars
     set gdefault                    " apply global substitution to all occurrences in lines
-    set splitright                  " new windows opens to the right
-    set splitbelow                  " new windows opens to the right
     set nostartofline               " Do not jump to first character with page commands.
 
 " Graphics
@@ -87,18 +64,17 @@ call plug#end()
     if $ITERM_PROFILE == "light"
         set background=light
         silent! colorscheme selenized
+        let g:airline_theme='base16'
     else
         set background=dark
         silent! colorscheme nord
+        let g:airline_theme='base16'
     endif
 
     " change color after column 90
     "let &colorcolumn=join(range(90,300),",")
 
 " Key (re)Mappings
-
-    " normal regex, not Vim's one
-    "noremap / /\v
 
     " easy moving to first non space and end of line
     nnoremap H ^
@@ -155,7 +131,7 @@ call plug#end()
     " Ctrl+s to save and if needed de-highlight search and select autocomplete
     noremap <C-s> :noh<CR>:w<CR>
     inoremap <C-s> <ESC>:noh<CR>:w<CR>
-    
+
     " Alt-A and Alt-x to increment and decrement numbers
     :nnoremap <A-a> <C-a>
     :nnoremap <A-x> <C-x>
@@ -166,7 +142,6 @@ call plug#end()
 
     " space to de-highlight search
     nnoremap <leader><Space> :noh<CR>
-    "inoremap <leader>m <ESC>:noh<CR>a
 
     " Toggle line numbers and fold column for easy copying
     nnoremap <leader>3 :setlocal norelativenumber!<CR>:set foldcolumn=0<CR>
@@ -177,23 +152,15 @@ call plug#end()
     " Fast editing of the init.vim
     noremap <leader>e :e! ~/.config/nvim/init.vim<CR>
 
-    " add blank lines above or below current line in insert mode
-    "inoremap <leader>[ <ESC>m`:put!=''<CR>``a
-    "inoremap <leader>] <ESC>m`:put=''<CR>``a
-
     " open vertical split
     nnoremap <leader>v <C-w>v<C-w>l
 
     " open horizontal split
-    nnoremap <leader>i <C-w>s<C-w>l
+    nnoremap <leader>s <C-w>s<C-w>l
 
     " q to quit, w to close buffer
     nnoremap <leader>q :q<CR>
     nnoremap <leader>w :bw<CR>
-
-    " [ and ] to add blank lines in normal mode
-    nnoremap <silent><leader>[ :set paste<CR>m`O<Esc>``:set nopaste<CR>
-    nnoremap <silent><leader>] :set paste<CR>m`o<Esc>``:set nopaste<CR>
 
     " t to run tests (for now just for Clojure with fireplace plugin
     nnoremap <leader>t :w<CR>:Require!<CR>:RunTests<CR>
@@ -209,9 +176,6 @@ call plug#end()
     inoremap {{ {<CR>}<ESC>O
 
 " Plugins
-
-    " Ctags
-        set tags=./tags;/,~/.vimtags
 
     " ctrlp
         let g:ctrlp_working_path_mode = 0
@@ -234,22 +198,8 @@ call plug#end()
         " RustFmt on save
         let g:rustfmt_autosave = 1
 
-    " syntastic
-        set statusline+=%#warningmsg#
-        set statusline+=%{SyntasticStatuslineFlag()}
-        set statusline+=%*
-
-        let g:syntastic_mode_map = {
-                \ "mode": "active",
-                \ "active_filetypes": [],
-                \ "passive_filetypes": [] }
-
-        let g:syntastic_always_populate_loc_list = 1
-        let g:syntastic_auto_loc_list = 0
-        let g:syntastic_check_on_open = 1
-        let g:syntastic_check_on_wq = 0
-
-        nnoremap <leader>s :SyntasticCheck<CR>
+    " airline with ALE
+    let g:airline#extensions#ale#enabled = 1
 
 " Automatic commands
 
