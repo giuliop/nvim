@@ -55,19 +55,21 @@ call plug#end()
     set foldenable                  " auto fold code
     set gdefault                    " apply global substitution to all occurrences in lines
     set nostartofline               " Do not jump to first character with page commands.
+    set splitright                  " new windows opens to the right
+    set splitbelow                  " new windows opens to the right
 
 " Graphics
 
     set termguicolors
     let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-    if $ITERM_PROFILE == "light"
-        set background=light
-        silent! colorscheme selenized
-        let g:airline_theme='base16'
-    else
+    if $ITERM_PROFILE == "dark"
         set background=dark
         silent! colorscheme nord
+        let g:airline_theme='base16'
+    else
+        set background=light
+        silent! colorscheme selenized
         let g:airline_theme='base16'
     endif
 
