@@ -99,6 +99,18 @@ call plug#end()
     nnoremap <C-k> <C-w>k
     nnoremap <C-l> <C-w>l
 
+    " also in terminal
+    "tnoremap <C-h> <C-\><C-n><C-w>h
+    "tnoremap <C-j> <C-\><C-n><C-w>j
+    "tnoremap <C-k> <C-\><C-n><C-w>k
+    "tnoremap <C-l> <C-\><C-n><C-w>l
+
+    " ESC, ctrl-[ to enter normal mode in terminal
+    tnoremap <ESC> <C-\><C-n>
+
+    " ctrl-w q to quit terminal
+    tnoremap <C-w>q <C-\><C-n><C-w><C-q>
+
     " resize with movement key
     nnoremap <left> <C-w>2>
     nnoremap <down> <C-w>2+
@@ -177,6 +189,29 @@ call plug#end()
     " close '{' one line below and add newline
     inoremap {{ {<CR>}<ESC>O
 
+    " open Neovim terminal in right split (use autocommands below to run current file based on filetype)
+    nnoremap <leader>r :vnew term://bash<CR>a
+
+" Automatic commands
+
+        " <leader>r runs interactively pyrhon files
+        autocmd FileType python nnoremap<leader>r :vnew term://python3 -i %<CR>a
+
+        " always switch to the current file directory.
+        autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
+
+        " HTML tabs to two spaces, no wrap, no expand tab to spaces, no show whitespaces
+        autocmd FileType html setlocal noexpandtab shiftwidth=2 tabstop=2 softtabstop=2 nowrap nolist
+
+        " When init.vim is edited, reload it
+        autocmd! bufwritepost init.vim source ~/.config/nvim/init.vim
+
+        " Jump to last cursor position when opening file
+        :au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
+
+        " Set comment options for teal files
+         autocmd BufNewFile,BufRead *.teal setlocal comments+=://
+
 " Plugins
 
     " ctrlp
@@ -202,23 +237,6 @@ call plug#end()
 
     " airline with ALE
     let g:airline#extensions#ale#enabled = 1
-
-" Automatic commands
-
-        " always switch to the current file directory.
-        autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
-
-        " HTML tabs to two spaces, no wrap, no expand tab to spaces, no show whitespaces
-        autocmd FileType html setlocal noexpandtab shiftwidth=2 tabstop=2 softtabstop=2 nowrap nolist
-
-        " When init.vim is edited, reload it
-        autocmd! bufwritepost init.vim source ~/.config/nvim/init.vim
-
-        " Jump to last cursor position when opening file
-        :au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-
-        " Set comment options for teal files
-         autocmd BufNewFile,BufRead *.teal setlocal comments+=://
 
 " Functions
 
