@@ -23,10 +23,6 @@ call plug#end()
 " General
     set modelines=0                 "will not use modelines
     set mouse=""                    "no mouse mode
-    set visualbell                  "no beep
-
-" System
-    set hidden                      " allow buffer switching without saving
     set undofile                    " persistent undo is nice
 
 " Formatting
@@ -61,7 +57,6 @@ call plug#end()
 " Graphics
 
     set termguicolors
-    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
     if $ITERM_PROFILE == "dark"
         set background=dark
@@ -82,16 +77,9 @@ call plug#end()
     nnoremap H ^
     nnoremap L $
 
-    set pastetoggle=<F2>           " pastetoggle (sane indentation on pastes)
-    " see syntax defintion under cursor
-    map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<' . synIDattr(synID(line("."),col("."),0),"name") . "> lo<" . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
-
     " Some extra time savers
     nnoremap ; :
     nnoremap : ;
-    imap <C-c> <ESC>
-    " No more help staring by mistake
-    noremap <F1> <ESC>
 
     " move around with ctrl + movement key
     nnoremap <C-h> <C-w>h
@@ -192,6 +180,10 @@ call plug#end()
     " open Neovim terminal in right split (use autocommands below to run current file based on filetype)
     nnoremap <leader>r :vnew term://bash<CR>a
 
+    " toggle mouse mode
+    nnoremap <leader>m :call ToggleMouse()<CR>
+    vnoremap <leader>m :call ToggleMouse()<CR>
+
 " Automatic commands
 
         " <leader>r runs interactively pyrhon files
@@ -236,7 +228,7 @@ call plug#end()
         let g:rustfmt_autosave = 1
 
     " airline with ALE
-    let g:airline#extensions#ale#enabled = 1
+        let g:airline#extensions#ale#enabled = 1
 
 " Functions
 
@@ -252,5 +244,16 @@ call plug#end()
             " clean up: restore previous search history, and cursor position
             let @/=_s
             call cursor(l, c)
+        endif
+    endfunction
+
+    " Toggle mouse mode
+    function! ToggleMouse()
+        if &mouse == 'a'
+            set mouse=
+            echo "Mouse disabled"
+        else
+            set mouse=a
+            echo "Mouse enabled"
         endif
     endfunction
