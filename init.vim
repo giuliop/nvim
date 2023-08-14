@@ -13,6 +13,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'github/copilot.vim'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
+    Plug 'calind/selenized.nvim'
     Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
     Plug 'rust-lang/rust.vim', { 'for': 'rust' }
     Plug 'alvan/vim-closetag', { 'for': 'html' }
@@ -229,6 +230,12 @@ call plug#end()
 
     " airline with ALE
         let g:airline#extensions#ale#enabled = 1
+
+    " ALE
+        " if ALE running replace gd with ALEGoToDefinition
+        "if exists(':ALEGoToDefinition')
+            nnoremap gd :ALEGoToDefinition<CR>
+        "endif
 
 " Functions
 
