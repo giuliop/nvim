@@ -1,4 +1,4 @@
-" Plugin ,managed via vim-plug
+"jPlugin ,managed via vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
     Plug '~/.config/nvim/my-vim-bundle'
     Plug 'preservim/nerdtree'
@@ -98,7 +98,7 @@ call plug#end()
     tnoremap <ESC> <C-\><C-n>
 
     " ctrl-w q to quit terminal
-    tnoremap <C-w>q <C-\><C-n><C-w><C-q>
+    tnoremap <C-w>q <C-\><C-n>:bd!<CR>
 
     " resize with movement key
     nnoremap <left> <C-w>2>
@@ -209,7 +209,7 @@ call plug#end()
 
     " ctrlp
         let g:ctrlp_working_path_mode = 0
-        nnoremap <leader>p :CtrlPMixed<CR>
+        nnoremap <leader>p :CtrlPMRU<CR>
         nnoremap <leader>b :CtrlPBuffer<CR>
         let g:ctrlp_show_hidden = 1
         let g:ctrlp_custom_ignore = {
@@ -232,10 +232,14 @@ call plug#end()
         let g:airline#extensions#ale#enabled = 1
 
     " ALE
-        " if ALE running replace gd with ALEGoToDefinition
-        "if exists(':ALEGoToDefinition')
-            nnoremap gd :ALEGoToDefinition<CR>
-        "endif
+        nnoremap <leader>d :ALEGoToDefinition<CR>
+
+        let g:ale_fixers = {
+                    \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+                    \   'python': ['autoimport'],
+                    \}
+
+        let g:ale_fix_on_save = 1
 
 " Functions
 
