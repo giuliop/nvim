@@ -1,24 +1,24 @@
 "jPlugin ,managed via vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
-    Plug '~/.config/nvim/my-vim-bundle'
-    Plug 'preservim/nerdtree'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-unimpaired'
-    Plug 'ctrlpvim/ctrlp.vim'
     Plug 'preservim/nerdcommenter'
-    Plug 'dense-analysis/ale'
-    Plug 'arcticicestudio/nord-vim'
-    Plug 'ericbn/vim-solarized'
-    Plug 'github/copilot.vim'
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'calind/selenized.nvim'
-    Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-    Plug 'rust-lang/rust.vim', { 'for': 'rust' }
-    Plug 'alvan/vim-closetag', { 'for': 'html' }
-    Plug 'aldur/vim-algorand-teal', { 'for': 'teal' }
-    Plug 'eslint/eslint', { 'for': 'javascript' }
+    if !exists('g:vscode')
+        Plug '~/.config/nvim/my-vim-bundle'
+        Plug 'preservim/nerdtree'
+        Plug 'ctrlpvim/ctrlp.vim'
+        Plug 'dense-analysis/ale'
+        Plug 'arcticicestudio/nord-vim'
+        Plug 'github/copilot.vim'
+        Plug 'vim-airline/vim-airline'
+        Plug 'vim-airline/vim-airline-themes'
+        Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+        Plug 'rust-lang/rust.vim', { 'for': 'rust' }
+        Plug 'alvan/vim-closetag', { 'for': 'html' }
+        Plug 'aldur/vim-algorand-teal', { 'for': 'teal' }
+        Plug 'eslint/eslint', { 'for': 'javascript' }
+    endif
 call plug#end()
 
 " General
@@ -208,6 +208,7 @@ call plug#end()
 " Plugins
 
     " ctrlp
+    if has('CtrlP')
         let g:ctrlp_working_path_mode = 0
         nnoremap <leader>p :CtrlPMRU<CR>
         nnoremap <leader>b :CtrlPBuffer<CR>
@@ -215,14 +216,17 @@ call plug#end()
         let g:ctrlp_custom_ignore = {
                     \ 'dir':  '\v[\/]\.(git|hg|svn)$',
                     \ 'file': '\v\.(swp|so|zip)$', }
+    endif
 
     " NerdTree
+    if has('NERDTree')
         noremap <leader>2 :NERDTreeToggle<CR>
         " let NERDTreeShowBookmarks=1
         let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
         let NERDTreeQuitOnOpen=1
         let NERDTreeShowHidden=1
         let NERDTreeShowLineNumbers=1
+    endif
 
     " rust.vim
         " RustFmt on save
@@ -232,6 +236,7 @@ call plug#end()
         let g:airline#extensions#ale#enabled = 1
 
     " ALE
+    if has('ALEGoToDefinition')
         nnoremap <leader>d :ALEGoToDefinition<CR>
 
         let g:ale_fixers = {
@@ -240,6 +245,7 @@ call plug#end()
                     \}
 
         let g:ale_fix_on_save = 1
+    endif
 
 " Functions
 
