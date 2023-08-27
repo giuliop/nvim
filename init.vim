@@ -33,10 +33,8 @@ call plug#end()
     set softtabstop=4               " let backspace delete indent
     set textwidth=0                 " Hard-wrap long lines as you type them
 
-    " Remove trailing whitespaces and ^M chars
-    autocmd FileType javascript,python,clojure,clojurescript,haskell autocmd BufWritePre <buffer> call StripTrailingWhitespace()
-    " Comment out following for no auto comments
-    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    " Remove trailing whitespaces
+    autocmd BufWritePre * %s/\s\+$//e
 
 " Vim UI
     set cursorline                  " highlight current line
@@ -181,9 +179,6 @@ call plug#end()
     " open Neovim terminal in right split (use autocommands below to run current file based on filetype)
     nnoremap <leader>r :vnew term://bash<CR>a
 
-    " toggle mouse mode
-    nnoremap <leader>m :call ToggleMouse()<CR>
-    vnoremap <leader>m :call ToggleMouse()<CR>
 
 " Automatic commands
 
@@ -240,31 +235,3 @@ call plug#end()
                     \}
 
         let g:ale_fix_on_save = 1
-
-" Functions
-
-    " Strip whitespace
-    function! StripTrailingWhitespace()
-        if !exists('g:spf13_keep_trailing_whitespace')
-            " Preparation: save last search, and cursor position.
-            let _s=@/
-            let l = line(".")
-            let c = col(".")
-            " do the business:
-            %s/\s\+$//e
-            " clean up: restore previous search history, and cursor position
-            let @/=_s
-            call cursor(l, c)
-        endif
-    endfunction
-
-    " Toggle mouse mode
-    function! ToggleMouse()
-        if &mouse == 'a'
-            set mouse=
-            echo "Mouse disabled"
-        else
-            set mouse=a
-            echo "Mouse enabled"
-        endif
-    endfunction
