@@ -208,7 +208,7 @@ call plug#end()
 " Plugins
 
     " ctrlp
-    if has('CtrlP')
+    if exists('CtrlP')
         let g:ctrlp_working_path_mode = 0
         nnoremap <leader>p :CtrlPMRU<CR>
         nnoremap <leader>b :CtrlPBuffer<CR>
@@ -219,7 +219,7 @@ call plug#end()
     endif
 
     " NerdTree
-    if has('NERDTree')
+    if exists('NERDTree')
         noremap <leader>2 :NERDTreeToggle<CR>
         " let NERDTreeShowBookmarks=1
         let NERDTreeIgnore=['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
@@ -236,7 +236,7 @@ call plug#end()
         let g:airline#extensions#ale#enabled = 1
 
     " ALE
-    if has('ALEGoToDefinition')
+    if exists('ALEGoToDefinition')
         nnoremap <leader>d :ALEGoToDefinition<CR>
 
         let g:ale_fixers = {
