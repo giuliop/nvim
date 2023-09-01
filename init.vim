@@ -1,9 +1,13 @@
-"jPlugin ,managed via vim-plug
+"Plugins managed via vim-plug
+
 call plug#begin('~/.local/share/nvim/plugged')
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-repeat'
     Plug 'tpope/vim-unimpaired'
-    Plug 'preservim/nerdcommenter'
+
+    Plug 'Shougo/context_filetype.vim'
+    Plug 'tyru/caw.vim'
+
     if !exists('g:vscode')
         Plug '~/.config/nvim/my-vim-bundle'
         Plug 'preservim/nerdtree'
@@ -179,6 +183,22 @@ call plug#end()
     " open Neovim terminal in right split (use autocommands below to run current file based on filetype)
     nnoremap <leader>r :vnew term://bash<CR>a
 
+
+    " Wrap/unwrap line in /* ... */
+    " useful for commenting out style lines in vue files
+    function WrapUnwrap()
+        let currentLine = getline('.')
+        " if currentline starts with \* and ends with *\, remove them
+        " else add them
+        if currentLine =~ '^\s*\/\*.*\*\/$'
+            let currentLine = substitute(currentLine, '^\s*\/\* ', '', '')
+            let currentLine = substitute(currentLine, '\s*\*\/$', '', '')
+        else
+            let currentLine = '/* ' . currentLine . ' */'
+        endif
+        call setline('.', currentLine)
+     endfunction
+     nnoremap <Leader>c :call WrapUnwrap()<CR>
 
 " Automatic commands
 
