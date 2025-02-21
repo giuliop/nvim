@@ -204,11 +204,10 @@ call plug#end()
         " <leader>r runs interactively pyrhon files
         autocmd FileType python nnoremap<leader>r :vnew term://python3 -i %<CR>a
 
-        " always switch to the current file directory.
+        " Always switch to the current file directory, except in VSCode
         if empty($VSCODE_NEO_VIM) " Only run if not in VSCode
-            autocmd BufEnter * if &buftype == '' && expand("%:p") != "" && bufname("") !~ "^\[A-Za-z0-9\]*://" | tcd %:p:h | endif
+            autocmd BufEnter * if &buftype == '' && expand("%:p") != '' && isdirectory(expand("%:p:h")) | tcd %:p:h | endif
         endif
-        autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | tcd %:p:h | endif
 
         " HTML tabs to two spaces, no wrap, no expand tab to spaces, no show whitespaces
         autocmd FileType html setlocal noexpandtab shiftwidth=2 tabstop=2 softtabstop=2 nowrap nolist
