@@ -6,7 +6,6 @@ call plug#begin('~/.local/share/nvim/plugged')
     Plug 'tpope/vim-unimpaired'
 
     Plug 'Shougo/context_filetype.vim'
-    Plug 'tyru/caw.vim'
 
     if !exists('g:vscode')
         Plug '~/.config/nvim/my-vim-bundle'
@@ -25,7 +24,7 @@ call plug#begin('~/.local/share/nvim/plugged')
     endif
 call plug#end()
 
-" General
+ "General
     set modelines=0                 "will not use modelines
     set mouse=""                    "no mouse mode
     set undofile                    " persistent undo is nice
@@ -206,7 +205,10 @@ call plug#end()
         autocmd FileType python nnoremap<leader>r :vnew term://python3 -i %<CR>a
 
         " always switch to the current file directory.
-        autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | lcd %:p:h | endif
+        if empty($VSCODE_NEO_VIM) " Only run if not in VSCode
+            autocmd BufEnter * if &buftype == '' && expand("%:p") != "" && bufname("") !~ "^\[A-Za-z0-9\]*://" | tcd %:p:h | endif
+        endif
+        autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | tcd %:p:h | endif
 
         " HTML tabs to two spaces, no wrap, no expand tab to spaces, no show whitespaces
         autocmd FileType html setlocal noexpandtab shiftwidth=2 tabstop=2 softtabstop=2 nowrap nolist
