@@ -3,7 +3,11 @@
     "allow": [
       "Read(//Users/giulio/.local/share/nvim/**)",
       "Bash(rm:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git reset:*)",
+      "Bash(git commit:*)",
+      "WebSearch",
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": [],

@@ -14,9 +14,20 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Setup lazy.nvim
 require("lazy").setup({
-  { "tpope/vim-surround" },
-  { "tpope/vim-repeat" },
-  { "tpope/vim-unimpaired" },
+  {
+    "kylechui/nvim-surround",
+    version = "*",
+    event = "VeryLazy",
+    config = function()
+      require("nvim-surround").setup()
+    end,
+  },
+  {
+    "tummetott/unimpaired.nvim",
+    config = function()
+      require("unimpaired").setup()
+    end,
+  },
 
   {
     "nvim-tree/nvim-tree.lua",
@@ -54,23 +65,77 @@ require("lazy").setup({
     config = function()
       require("lualine").setup({
         options = {
-          theme = "nord",
+          theme = "solarized_light",
         },
       })
     end,
   },
 
   {
-    "arcticicestudio/nord-vim",
+    "maxmx03/solarized.nvim",
     cond = not vim.g.vscode,
     config = function()
-      vim.cmd.colorscheme("nord")
+      require('solarized').setup({
+        variant = 'summer', -- light theme
+      })
+      vim.cmd.colorscheme("solarized")
     end,
   },
 
   {
     "github/copilot.vim",
     cond = not vim.g.vscode,
+  },
+
+  -- LSP Configuration
+  {
+    "williamboman/mason.nvim",
+    cond = not vim.g.vscode,
+    config = function()
+      require("mason").setup()
+    end,
+  },
+
+  {
+    "williamboman/mason-lspconfig.nvim",
+    cond = not vim.g.vscode,
+    dependencies = { "mason.nvim" },
+    config = function()
+      require("mason-lspconfig").setup({
+        ensure_installed = { "lua_ls", "ts_ls", "pyright", "gopls" },
+        automatic_installation = true,
+      })
+    end,
+  },
+
+  {
+    "neovim/nvim-lspconfig",
+    cond = not vim.g.vscode,
+    dependencies = { "mason-lspconfig.nvim" },
+    config = function()
+      local lspconfig = require("lspconfig")
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+      -- Configure LSP servers
+      lspconfig.lua_ls.setup({ capabilities = capabilities })
+      lspconfig.ts_ls.setup({ capabilities = capabilities })
+      lspconfig.pyright.setup({ capabilities = capabilities })
+      lspconfig.gopls.setup({ capabilities = capabilities })
+
+      -- LSP keybindings
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+        callback = function(ev)
+          local opts = { buffer = ev.buf }
+          vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+          vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+          vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+        end,
+      })
+    end,
   },
 }, {
   -- Lazy.nvim configuration
