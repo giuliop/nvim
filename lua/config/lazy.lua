@@ -1,5 +1,3 @@
--- Lazy.nvim plugin manager setup
-
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -20,7 +18,6 @@ require("lazy").setup({
   { "tpope/vim-repeat" },
   { "tpope/vim-unimpaired" },
 
-  -- Modern file explorer
   {
     "nvim-tree/nvim-tree.lua",
     cond = not vim.g.vscode,
@@ -31,26 +28,18 @@ require("lazy").setup({
         renderer = { group_empty = true },
         filters = { dotfiles = false },
       })
-      -- Keep familiar keybinding
       vim.keymap.set("n", "<leader>2", ":NvimTreeToggle<CR>", { desc = "Toggle file tree" })
     end,
   },
 
-  -- Modern fuzzy finder
   {
     "nvim-telescope/telescope.nvim",
     cond = not vim.g.vscode,
     tag = "0.1.8",
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
-      local telescope = require("telescope")
-      telescope.setup({
-        defaults = {
-          file_ignore_patterns = { "%.git/", "node_modules/", "%.pyc" },
-        },
-      })
+      require("telescope").setup()
       
-      -- Keep familiar keybindings
       local builtin = require("telescope.builtin")
       vim.keymap.set("n", "<leader>p", builtin.oldfiles, { desc = "Recent files" })
       vim.keymap.set("n", "<leader>b", builtin.buffers, { desc = "Switch buffers" })
@@ -58,7 +47,6 @@ require("lazy").setup({
     end,
   },
 
-  -- Modern statusline (replacing airline)
   {
     "nvim-lualine/lualine.nvim",
     cond = not vim.g.vscode,
@@ -66,25 +54,24 @@ require("lazy").setup({
     config = function()
       require("lualine").setup({
         options = {
-          theme = vim.env.ITERM_PROFILE == "dark" and "nord" or "auto",
+          theme = "nord",
         },
       })
     end,
   },
 
-  -- Color schemes
   {
     "arcticicestudio/nord-vim",
     cond = not vim.g.vscode,
+    config = function()
+      vim.cmd.colorscheme("nord")
+    end,
   },
 
-  -- GitHub Copilot
   {
     "github/copilot.vim",
     cond = not vim.g.vscode,
   },
-
-
 }, {
   -- Lazy.nvim configuration
   ui = {

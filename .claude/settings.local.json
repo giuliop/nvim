@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Users/giulio/.local/share/nvim/**)"
+      "Read(//Users/giulio/.local/share/nvim/**)",
+      "Bash(rm:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": [],
