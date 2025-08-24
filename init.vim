@@ -11,7 +11,6 @@ call plug#begin('~/.local/share/nvim/plugged')
         Plug '~/.config/nvim/my-vim-bundle'
         Plug 'preservim/nerdtree'
         Plug 'ctrlpvim/ctrlp.vim'
-        Plug 'dense-analysis/ale'
         Plug 'arcticicestudio/nord-vim'
         Plug 'github/copilot.vim'
         Plug 'vim-airline/vim-airline'
@@ -70,8 +69,6 @@ call plug#end()
         let g:airline_theme='base16'
     endif
 
-    " change color after column 90
-    "let &colorcolumn=join(range(90,300),",")
 
 " Key (re)Mappings
 
@@ -126,9 +123,6 @@ call plug#end()
     " allow the . to execute once for each line of a visual selection
     vnoremap . :normal .<CR>
 
-    " For when you forget to sudo.. Really Write the file.
-    cmap w!! w !sudo tee > /dev/null %
-
     "AA in insert mode brings to end of line in insert mode
     inoremap AA <ESC>A
 
@@ -166,38 +160,9 @@ call plug#end()
     nnoremap <leader>q :q<CR>
     nnoremap <leader>w :bw<CR>
 
-    " t to run tests (for now just for Clojure with fireplace plugin
-    nnoremap <leader>t :w<CR>:Require!<CR>:RunTests<CR>
-
-    " ff to display all lines with keyword under cursor and ask where jump to
-    nnoremap <leader>ff [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
-
-    " enter to add a blank lime above and type into it with a blank line below
-    nnoremap <leader><CR> <up>o<ESC><up>o
-    "inoremap <leader><CR> <ESC><up>o<ESC><up>o
-
-    " close '{' one line below and add newline
-    inoremap {{ {<CR>}<ESC>O
-
     " open Neovim terminal in right split (use autocommands below to run current file based on filetype)
     nnoremap <leader>r :vnew term://bash<CR>a
 
-
-    " Wrap/unwrap line in /* ... */
-    " useful for commenting out style lines in vue files
-    function WrapUnwrap()
-        let currentLine = getline('.')
-        " if currentline starts with \* and ends with *\, remove them
-        " else add them
-        if currentLine =~ '^\s*\/\*.*\*\/$'
-            let currentLine = substitute(currentLine, '^\s*\/\* ', '', '')
-            let currentLine = substitute(currentLine, '\s*\*\/$', '', '')
-        else
-            let currentLine = '/* ' . currentLine . ' */'
-        endif
-        call setline('.', currentLine)
-     endfunction
-     nnoremap <Leader>c :call WrapUnwrap()<CR>
 
 " Automatic commands
 
@@ -243,16 +208,3 @@ call plug#end()
     " rust.vim
         " RustFmt on save
         let g:rustfmt_autosave = 1
-
-    " airline with ALE
-        let g:airline#extensions#ale#enabled = 1
-
-    " ALE
-        nnoremap <leader>d :ALEGoToDefinition<CR>
-
-        let g:ale_fixers = {
-                    \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-                    \   'python': ['autoimport'],
-                    \}
-
-        let g:ale_fix_on_save = 1
