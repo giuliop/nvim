@@ -1,7 +1,7 @@
 local opt = vim.opt
 
 -- General settings
-opt.mouse = ""                    -- Disable mouse mode
+opt.mouse = "a"                   -- Enable mouse mode
 opt.undofile = true               -- Enable persistent undo
 
 -- Indentation and formatting

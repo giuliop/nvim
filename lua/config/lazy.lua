@@ -47,14 +47,30 @@ require("lazy").setup({
     "nvim-telescope/telescope.nvim",
     cond = not vim.g.vscode,
     tag = "0.1.8",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = { 
+      "nvim-lua/plenary.nvim",
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
+    },
     config = function()
-      require("telescope").setup()
+      require("telescope").setup({
+        extensions = {
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+          }
+        }
+      })
+      
+      require('telescope').load_extension('fzf')
       
       local builtin = require("telescope.builtin")
-      vim.keymap.set("n", "<leader>p", builtin.oldfiles, { desc = "Recent files" })
-      vim.keymap.set("n", "<leader>b", builtin.buffers, { desc = "Switch buffers" })
-      vim.keymap.set("n", "<C-p>", builtin.find_files, { desc = "Find files" })
+      vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+      vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
+      vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+      vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "Telescope recent files" })
+      vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
     end,
   },
 
@@ -78,7 +94,24 @@ require("lazy").setup({
       require('solarized').setup({
         variant = 'summer', -- light theme
       })
-      vim.cmd.colorscheme("solarized")
+    end,
+  },
+
+  {
+    "sainnhe/everforest",
+    cond = not vim.g.vscode,
+  },
+
+  {
+    "shaunsingh/nord.nvim",
+    cond = not vim.g.vscode,
+  },
+
+  {
+    "sonph/onehalf",
+    cond = not vim.g.vscode,
+    config = function()
+      vim.opt.rtp:append(vim.fn.expand("~/.local/share/nvim/lazy/onehalf/vim"))
     end,
   },
 
