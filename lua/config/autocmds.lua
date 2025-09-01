@@ -41,17 +41,23 @@ autocmd("BufReadPost", {
   desc = "Restore cursor position on file open",
 })
 
--- Save and restore colorscheme
-local colorscheme_file = vim.fn.stdpath("data") .. "/colorscheme.txt"
+-- Save and restore colorscheme and background
+local theme_file = vim.fn.stdpath("data") .. "/theme.txt"
 
--- Load saved colorscheme on startup
+-- Load saved colorscheme and background on startup
 autocmd("VimEnter", {
-  group = augroup("RestoreColorscheme", { clear = true }),
+  group = augroup("RestoreTheme", { clear = true }),
   callback = function()
-    local file = io.open(colorscheme_file, "r")
+    local file = io.open(theme_file, "r")
     if file then
       local colorscheme = file:read("*line")
+      local background = file:read("*line")
       file:close()
+      
+      if background and (background == "light" or background == "dark") then
+        vim.opt.background = background
+      end
+      
       if colorscheme and colorscheme ~= "" then
         vim.cmd("colorscheme " .. colorscheme)
       else
@@ -61,18 +67,28 @@ autocmd("VimEnter", {
       vim.cmd("colorscheme onehalfdark")  -- fallback
     end
   end,
-  desc = "Restore last used colorscheme",
+  desc = "Restore last used colorscheme and background",
 })
 
--- Save colorscheme when it changes
+-- Save colorscheme and background when either changes
+local function save_theme()
+  local file = io.open(theme_file, "w")
+  if file then
+    file:write((vim.g.colors_name or "onehalfdark") .. "\n")
+    file:write(vim.o.background .. "\n")
+    file:close()
+  end
+end
+
 autocmd("ColorScheme", {
-  group = augroup("SaveColorscheme", { clear = true }),
-  callback = function()
-    local file = io.open(colorscheme_file, "w")
-    if file then
-      file:write(vim.g.colors_name)
-      file:close()
-    end
-  end,
-  desc = "Save current colorscheme",
+  group = augroup("SaveTheme", { clear = true }),
+  callback = save_theme,
+  desc = "Save current colorscheme and background",
+})
+
+autocmd("OptionSet", {
+  group = augroup("SaveTheme", { clear = false }),
+  pattern = "background",
+  callback = save_theme,
+  desc = "Save background setting when changed",
 })

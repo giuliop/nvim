@@ -31,4 +31,4 @@ opt.scrolloff = 3                 -- Minimum lines above/below cursor
 opt.startofline = false          -- Don't jump to first character with page commands
 
 -- Graphics and theming
-vim.opt.background = "light"
+-- Background setting is now managed by autocmds for persistence

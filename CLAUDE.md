@@ -127,7 +127,7 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 - Cursor position restored when reopening files  
 - Python files get special terminal runner keybind
 - Go files automatically formatted with LSP on save
-- Colorscheme automatically saved and restored across sessions
+- Colorscheme and background automatically saved and restored across sessions
 
 ### Editor Preferences
 - 4-space indentation with tabs converted to spaces
@@ -135,5 +135,14 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 - Light background theme (Solarized summer variant)
 - Mouse enabled for all modes
 - Case-insensitive search with smart case sensitivity
-- Automatic colorscheme persistence across sessions (defaults to onehalfdark)
+- Automatic colorscheme and background persistence across sessions (defaults to onehalfdark)
 - Go files automatically formatted with LSP on save
+
+## Commit Guidelines
+
+When creating commits, do NOT include the following footer:
+```
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
