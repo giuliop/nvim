@@ -3,6 +3,7 @@ local opt = vim.opt
 -- General settings
 opt.mouse = "a"                   -- Enable mouse mode
 opt.undofile = true               -- Enable persistent undo
+opt.clipboard = "unnamedplus"     -- Use system clipboard for yank/paste
 
 -- Indentation and formatting
 opt.shiftwidth = 4                -- Use indents of 4 spaces
