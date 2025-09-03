@@ -44,10 +44,14 @@ autocmd("BufReadPost", {
 -- Save and restore colorscheme and background
 local theme_file = vim.fn.stdpath("data") .. "/theme.txt"
 
--- Load saved colorscheme and background on startup
+-- Load saved colorscheme and background on startup (skip in VSCode)
 autocmd("VimEnter", {
   group = augroup("RestoreTheme", { clear = true }),
   callback = function()
+    if vim.g.vscode then
+      return
+    end
+    
     local file = io.open(theme_file, "r")
     if file then
       local colorscheme = file:read("*line")
