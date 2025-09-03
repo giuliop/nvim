@@ -38,6 +38,16 @@ require("lazy").setup({
         view = { width = 30 },
         renderer = { group_empty = true },
         filters = { dotfiles = false },
+        on_attach = function(bufnr)
+          local api = require('nvim-tree.api')
+          local function opts(desc)
+            return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+          end
+          vim.keymap.set('n', 'v', api.node.open.vertical, opts('Open: Vertical Split'))
+          vim.keymap.set('n', 's', api.node.open.horizontal, opts('Open: Horizontal Split'))
+          vim.keymap.set('n', '<CR>', api.node.open.edit, opts('Open'))
+          vim.keymap.set('n', '<2-LeftMouse>', api.node.open.edit, opts('Open'))
+        end,
       })
       vim.keymap.set("n", "<leader>2", ":NvimTreeToggle<CR>", { desc = "Toggle file tree" })
     end,
