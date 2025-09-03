@@ -146,15 +146,6 @@ require("lazy").setup({
     cond = not vim.g.vscode,
     dependencies = { "mason-lspconfig.nvim" },
     config = function()
-      local lspconfig = require("lspconfig")
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-      -- Configure LSP servers
-      lspconfig.lua_ls.setup({ capabilities = capabilities })
-      lspconfig.ts_ls.setup({ capabilities = capabilities })
-      lspconfig.pyright.setup({ capabilities = capabilities })
-      lspconfig.gopls.setup({ capabilities = capabilities })
-
       -- LSP keybindings
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
