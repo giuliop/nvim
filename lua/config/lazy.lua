@@ -120,6 +120,20 @@ require("lazy").setup({
     cond = not vim.g.vscode,
   },
 
+  {
+    "iamcco/markdown-preview.nvim",
+    cond = not vim.g.vscode,
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+    config = function()
+      vim.g.mkdp_browser = 'Google Chrome'
+      vim.keymap.set("n", "<leader>p", ":MarkdownPreview<CR>", { desc = "Open markdown preview" })
+    end,
+  },
+
   -- LSP Configuration
   {
     "williamboman/mason.nvim",
