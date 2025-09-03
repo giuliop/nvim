@@ -30,6 +30,38 @@ opt.scrolloff = 3                 -- Minimum lines above/below cursor
 
 -- Other useful settings
 opt.startofline = false          -- Don't jump to first character with page commands
+opt.updatetime = 300             -- Faster completion and diagnostics (default 4000ms)
+
+-- Diagnostic settings
+vim.diagnostic.config({
+  float = {
+    focusable = false,
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+  },
+})
+
+-- Auto-show diagnostics when cursor is on error line
+vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
+  callback = function()
+    -- Only show if there are diagnostics on current line
+    local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+    local diagnostics = vim.diagnostic.get(0, {lnum = line})
+    if #diagnostics > 0 then
+      local opts = {
+        focusable = false,
+        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+        border = 'rounded',
+        source = 'always',
+        prefix = ' ',
+      }
+      vim.diagnostic.open_float(nil, opts)
+    end
+  end
+})
 
 -- Graphics and theming
 -- Background setting is now managed by autocmds for persistence
