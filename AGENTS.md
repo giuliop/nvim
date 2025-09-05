@@ -24,7 +24,9 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
   - `mason.nvim`: LSP installer interface
   - `mason-lspconfig.nvim`: Bridge between Mason and lspconfig
   - `nvim-lspconfig`: LSP client configurations
+- **TypeScript Tools**: Enhanced TypeScript development with `typescript-tools.nvim`
 - **GitHub Copilot**: AI-powered code completion
+- **Markdown Preview**: Live markdown preview with `markdown-preview.nvim`
 - **Language servers**: lua_ls, ts_ls, pyright, gopls (auto-installed via Mason)
 
 ### UI/Theme
@@ -45,7 +47,6 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 - `<leader>fb` - Browse buffers
 - `<leader>fr` - Recent files
 - `<leader>fh` - Help tags
-- `<leader>e` - Edit init.lua
 
 **Window Management:**
 - `<leader>v` - Vertical split
@@ -53,10 +54,18 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 - `<leader>n` - New file in vertical split
 - `<leader>q` - Quit
 - `<leader>w` - Close buffer
+- `<leader>3` - Toggle line numbers
 
 **Terminal:**
 - `<leader>r` - Open bash terminal in vertical split
 - Python files: `<leader>r` - Run current Python file interactively
+
+**Theme Management:**
+- `<leader>tt` - Cycle through themes (solarized, everforest, nord, onehalfdark)
+- `<leader>tb` - Toggle background (light/dark)
+
+**Markdown:**
+- `<leader>p` - Open markdown preview
 
 ### Navigation & Editing
 - `H` - Move to first non-blank character (replaces `^`)
@@ -66,6 +75,20 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 - `Q` - Replay macro q
 - `Ctrl+h/j/k/l` - Window navigation
 - `Ctrl+s` - Save and clear search highlight
+- Arrow keys - Window resizing (left/right: width, up/down: height)
+
+### Terminal Mode
+- `Esc` - Exit terminal mode
+- `Ctrl+w q` - Close terminal buffer
+
+### Insert Mode
+- `Ctrl+W` - Delete previous word
+- `Ctrl+U` - Delete to start of line
+
+### Visual Mode
+- `<` - Indent left and reselect
+- `>` - Indent right and reselect
+- `.` - Apply . command to selection
 
 ### LSP Bindings (when LSP server attached)
 - `gd` - Go to definition
@@ -99,6 +122,27 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 ```bash
 # Toggle file explorer
 <leader>2
+
+# Within nvim-tree:
+v    # Open file in vertical split
+s    # Open file in horizontal split
+```
+
+### Theme Commands
+```bash
+# Cycle through themes
+:ThemeCycle
+
+# Toggle background light/dark
+:BackgroundToggle
+```
+
+### Markdown Preview
+```bash
+# Start/stop markdown preview
+:MarkdownPreview
+:MarkdownPreviewStop
+:MarkdownPreviewToggle
 ```
 
 ## Development Workflow
@@ -122,17 +166,19 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 - Trailing whitespace automatically removed on save
 - Cursor position restored when reopening files
 - Python files get special terminal runner keybind
-- Go files automatically formatted with LSP on save
+- Go files automatically formatted with LSP on save (with import organization)
 - Colorscheme and background automatically saved and restored across sessions
+- Auto-display diagnostics when cursor hovers over error lines
 
 ### Editor Preferences
 - 4-space indentation with tabs converted to spaces
 - Relative line numbers with absolute for current line
-- Light background theme (Solarized summer variant)
+- Persistent colorscheme/background settings (defaults to onehalfdark)
 - Mouse enabled for all modes
 - Case-insensitive search with smart case sensitivity
-- Automatic colorscheme and background persistence across sessions (defaults to onehalfdark)
-- Go files automatically formatted with LSP on save
+- System clipboard integration
+- Floating diagnostic windows with rounded borders
+- TypeScript inlay hints and enhanced completions
 
 ## Commit Guidelines
 
