@@ -57,7 +57,7 @@ require("lazy").setup({
     "nvim-telescope/telescope.nvim",
     cond = not vim.g.vscode,
     tag = "0.1.8",
-    dependencies = { 
+    dependencies = {
       "nvim-lua/plenary.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
     },
@@ -72,9 +72,9 @@ require("lazy").setup({
           }
         }
       })
-      
+
       require('telescope').load_extension('fzf')
-      
+
       local builtin = require("telescope.builtin")
       vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
       vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
@@ -185,6 +185,27 @@ require("lazy").setup({
       })
     end,
   },
+
+  -- TypeScript ergonomics (uses typescript-language-server under the hood)
+  {
+    "pmizio/typescript-tools.nvim",
+    cond = not vim.g.vscode,
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    config = function()
+      require("typescript-tools").setup({
+        settings = {
+          separate_diagnostic_server = true,
+          publish_diagnostic_on = "insert_leave",
+          tsserver_file_preferences = {
+            includeInlayParameterNameHints = "all",
+            includeCompletionsForModuleExports = true,
+            quotePreference = "auto",
+          },
+        },
+      })
+    end,
+  },
+
 }, {
   -- Lazy.nvim configuration
   ui = {
