@@ -4,6 +4,7 @@ local opt = vim.opt
 opt.mouse = "a"                   -- Enable mouse mode
 opt.undofile = true               -- Enable persistent undo
 opt.clipboard = "unnamedplus"     -- Use system clipboard for yank/paste
+opt.confirm = true                -- Confirm to save changes on exit
 
 -- Indentation and formatting
 opt.shiftwidth = 4                -- Use indents of 4 spaces
@@ -16,10 +17,13 @@ opt.cursorline = true             -- Highlight current line
 opt.relativenumber = true         -- Show relative line numbers
 opt.number = true                 -- Also show absolute line number for current line
 opt.termguicolors = true          -- Enable true color support
+opt.signcolumn = "yes"            -- Always show sign column to avoid jitter
+opt.showmode = false              -- Hide mode since lualine shows it
 
 -- Search settings
 opt.ignorecase = true             -- Case insensitive search
 opt.smartcase = true              -- Case sensitive when uppercase present
+opt.inccommand = "split"          -- Live preview of substitute commands
 
 -- Window behavior
 opt.splitright = true             -- New vertical splits open to the right
@@ -31,6 +35,7 @@ opt.scrolloff = 3                 -- Minimum lines above/below cursor
 -- Other useful settings
 opt.startofline = false          -- Don't jump to first character with page commands
 opt.updatetime = 300             -- Faster completion and diagnostics (default 4000ms)
+opt.timeoutlen = 400             -- Faster mapped sequence timeout
 
 -- Diagnostic settings
 vim.diagnostic.config({

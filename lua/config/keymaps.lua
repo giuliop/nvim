@@ -48,7 +48,6 @@ keymap("i", "<C-s>", "<ESC>:noh<CR>:w<CR>", { desc = "Save file and clear search
 -- Leader key mappings
 keymap("n", "<leader><Space>", ":noh<CR>", { desc = "Clear search highlight" })
 keymap("n", "<leader>n", ":vne<CR>", { desc = "Open new file in vertical split" })
-keymap("n", "<leader>e", ":e! ~/.config/nvim/init.lua<CR>", { desc = "Edit init.lua" })
 keymap("n", "<leader>v", "<C-w>v<C-w>l", { desc = "Open vertical split" })
 keymap("n", "<leader>s", "<C-w>s<C-w>l", { desc = "Open horizontal split" })
 keymap("n", "<leader>q", ":q<CR>", { desc = "Quit" })
