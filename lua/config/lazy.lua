@@ -168,7 +168,7 @@ require("lazy").setup({
   {
     "neovim/nvim-lspconfig",
     cond = not vim.g.vscode,
-    dependencies = { "mason-lspconfig.nvim" },
+    dependencies = { "mason-lspconfig.nvim", "hrsh7th/cmp-nvim-lsp" },
     config = function()
       -- LSP keybindings
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -182,6 +182,47 @@ require("lazy").setup({
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
           vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
         end,
+      })
+    end,
+  },
+
+  -- Completion
+  {
+    "hrsh7th/nvim-cmp",
+    cond = not vim.g.vscode,
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    config = function()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
+
+      cmp.setup({
+        snippet = {
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
+        },
+        mapping = cmp.mapping.preset.insert({
+          ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<C-p>"] = cmp.mapping.select_prev_item(),
+          ["<C-n>"] = cmp.mapping.select_next_item(),
+        }),
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          { name = "luasnip" },
+        }, {
+          { name = "buffer" },
+        }),
       })
     end,
   },
