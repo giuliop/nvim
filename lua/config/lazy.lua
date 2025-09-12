@@ -132,7 +132,10 @@ require("lazy").setup({
 
   {
     "iamcco/markdown-preview.nvim",
-    cond = not vim.g.vscode,
+    -- Load only on macOS to avoid issues on headless/Ubuntu server
+    cond = function()
+      return (not vim.g.vscode) and (vim.loop.os_uname().sysname == "Darwin")
+    end,
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
     build = function()
