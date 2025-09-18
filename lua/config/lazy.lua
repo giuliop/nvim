@@ -37,7 +37,13 @@ require("lazy").setup({
       require("nvim-tree").setup({
         view = { width = 30 },
         renderer = { group_empty = true },
-        filters = { dotfiles = false },
+        filters = {
+          dotfiles = false,
+          git_ignored = false,
+        },
+        git = {
+          ignore = false,
+        },
         on_attach = function(bufnr)
           local api = require('nvim-tree.api')
           local function opts(desc)
