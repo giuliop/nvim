@@ -37,7 +37,6 @@ opt.startofline = false          -- Don't jump to first character with page comm
 opt.updatetime = 300             -- Faster completion and diagnostics (default 4000ms)
 opt.timeoutlen = 400             -- Faster mapped sequence timeout
 
--- Diagnostic settings
 vim.diagnostic.config({
   float = {
     focusable = false,
@@ -49,22 +48,45 @@ vim.diagnostic.config({
   },
 })
 
+local severity_labels = {
+  [vim.diagnostic.severity.ERROR] = "Error",
+  [vim.diagnostic.severity.WARN] = "Warning",
+  [vim.diagnostic.severity.INFO] = "Info",
+  [vim.diagnostic.severity.HINT] = "Hint",
+}
+
+local severity_highlights = {
+  [vim.diagnostic.severity.ERROR] = "DiagnosticError",
+  [vim.diagnostic.severity.WARN] = "DiagnosticWarn",
+  [vim.diagnostic.severity.INFO] = "DiagnosticInfo",
+  [vim.diagnostic.severity.HINT] = "DiagnosticHint",
+}
+
 -- Auto-show diagnostics when cursor is on error line
 vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
   callback = function()
-    -- Only show if there are diagnostics on current line
-    local line = vim.api.nvim_win_get_cursor(0)[1] - 1
-    local diagnostics = vim.diagnostic.get(0, {lnum = line})
-    if #diagnostics > 0 then
-      local opts = {
-        focusable = false,
-        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-        border = 'rounded',
-        source = 'always',
-        prefix = ' ',
-      }
-      vim.diagnostic.open_float(nil, opts)
+    local cursor_position = vim.api.nvim_win_get_cursor(0)
+    local diagnostics = vim.diagnostic.get(0, { lnum = cursor_position[1] - 1 })
+
+    if #diagnostics == 0 then
+      vim.api.nvim_echo({{""}}, false, {})
+      return
     end
+
+    local chunks = {}
+    for index, diagnostic in ipairs(diagnostics) do
+      local label = severity_labels[diagnostic.severity] or "Info"
+      local message = diagnostic.message:gsub("\n", " ")
+      local highlight = severity_highlights[diagnostic.severity] or "DiagnosticInfo"
+
+      table.insert(chunks, { string.format("%s: %s", label, message), highlight })
+
+      if index < #diagnostics then
+        table.insert(chunks, { "  |  ", "Normal" })
+      end
+    end
+
+    vim.api.nvim_echo(chunks, false, {})
   end
 })
 
