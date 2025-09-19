@@ -69,6 +69,19 @@ require("lazy").setup({
     },
     config = function()
       require("telescope").setup({
+        defaults = {
+          file_ignore_patterns = {
+            "%.git/",
+            "node_modules",
+          },
+        },
+        pickers = {
+          find_files = {
+            hidden = true,
+            follow = true,
+            no_ignore = true,
+          },
+        },
         extensions = {
           fzf = {
             fuzzy = true,
