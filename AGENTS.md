@@ -9,6 +9,13 @@ This is a modern Neovim configuration written in Lua, organized into modular com
   - `autocmds.lua`: Autocommands for file handling and Python execution
   - `lazy.lua`: Plugin management and configuration using lazy.nvim
 
+## Compatibility
+
+This configuration is shared between Mac and Linux systems.
+It is very important that any changes made work on both platforms.
+
+Moreover, it detects if running inside VSCode and disables certain plugins accordingly.
+
 ## Plugin Architecture
 
 The configuration uses lazy.nvim for plugin management with these key plugins:
