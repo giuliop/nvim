@@ -192,13 +192,45 @@ require("lazy").setup({
     cond = not vim.g.vscode,
     dependencies = { "mason-lspconfig.nvim", "hrsh7th/cmp-nvim-lsp" },
     config = function()
+      -- Custom hover function that displays at the bottom like diagnostics
+      local hover_suppress_ms = 3000
+
+      local function hover_at_bottom()
+        local clients = vim.lsp.get_clients({ bufnr = 0 })
+        if #clients == 0 then
+          return
+        end
+
+        local params = vim.lsp.util.make_position_params(0, clients[1].offset_encoding)
+        vim.lsp.buf_request(0, 'textDocument/hover', params, function(err, result, ctx, config)
+          if err or not result or not result.contents then
+            vim.api.nvim_echo({{ "", "Normal" }}, false, {})
+            return
+          end
+
+          local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
+          local contents = table.concat(markdown_lines, " ")
+
+          -- Remove excessive whitespace and markdown formatting for command line display
+          contents = contents:gsub("\n+", " "):gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+
+          if contents ~= "" then
+              vim.api.nvim_echo({{ contents, "Normal" }}, false, {})
+              local now = vim.loop and vim.loop.hrtime and vim.loop.hrtime()
+              if now then
+                vim.g.__hover_message_suppress_until = now + (hover_suppress_ms * 1e6)
+              end
+          end
+        end)
+      end
+
       -- LSP keybindings
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
           local opts = { buffer = ev.buf }
           vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-          vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+          vim.keymap.set("n", "K", hover_at_bottom, opts)
           vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
           vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
           vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)

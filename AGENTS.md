@@ -99,7 +99,7 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 
 ### LSP Bindings (when LSP server attached)
 - `gd` - Go to definition
-- `K` - Hover documentation
+- `K` - Hover documentation in the command line (briefly suppresses diagnostics)
 - `gi` - Go to implementation
 - `gr` - Find references
 - `<leader>rn` - Rename symbol
