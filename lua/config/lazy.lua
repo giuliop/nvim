@@ -182,7 +182,9 @@ require("lazy").setup({
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = { "lua_ls", "ts_ls", "pyright", "gopls" },
-        automatic_installation = true,
+        automatic_enable = {
+          exclude = { "ts_ls" },
+        },
       })
     end,
   },
