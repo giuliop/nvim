@@ -45,6 +45,25 @@ keymap("v", ".", ":normal .<CR>", { desc = "Apply . to visual selection" })
 keymap("n", "<C-s>", ":noh<CR>:w<CR>", { desc = "Save file and clear search highlight" })
 keymap("i", "<C-s>", "<ESC>:noh<CR>:w<CR>", { desc = "Save file and clear search highlight" })
 
+-- Copilot toggle (leader mapping for terminal compatibility)
+local function toggle_copilot()
+  if vim.fn.exists(":Copilot") ~= 2 then
+    print("Copilot command not available")
+    return
+  end
+
+  if vim.g.copilot_enabled == 0 then
+    vim.cmd("Copilot enable")
+    print("Copilot enabled")
+  else
+    vim.cmd("Copilot disable")
+    print("Copilot disabled")
+  end
+end
+if not vim.g.vscode then
+  keymap("n", "<leader>i", toggle_copilot, { desc = "Toggle Copilot" })
+end
+
 -- Leader key mappings
 keymap("n", "<leader><Space>", ":noh<CR>", { desc = "Clear search highlight" })
 keymap("n", "<leader>n", ":vne<CR>", { desc = "Open new file in vertical split" })
