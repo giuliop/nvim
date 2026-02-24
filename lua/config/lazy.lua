@@ -112,6 +112,11 @@ require("lazy").setup({
         options = {
           theme = "solarized_light",
         },
+        sections = {
+          lualine_c = {
+            { "filename", path = 4 },
+          },
+        },
       })
     end,
   },
