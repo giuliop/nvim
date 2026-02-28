@@ -1,11 +1,15 @@
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
--- Remove trailing whitespace on save
+-- Remove trailing whitespace on save (exclude markdown files)
 autocmd("BufWritePre", {
   group = augroup("TrimWhitespace", { clear = true }),
   pattern = "*",
-  command = "%s/\\s\\+$//e",
+  callback = function()
+    if vim.bo.filetype ~= "markdown" then
+      vim.cmd("%s/\\s\\+$//e")
+    end
+  end,
   desc = "Remove trailing whitespace on save",
 })
 
