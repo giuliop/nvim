@@ -156,9 +156,11 @@ require("lazy").setup({
 
   {
     "iamcco/markdown-preview.nvim",
-    -- Load only on macOS to avoid issues on headless/Ubuntu server
+    -- Load only on macOS with a display (not over SSH)
     cond = function()
-      return (not vim.g.vscode) and (vim.loop.os_uname().sysname == "Darwin")
+      return (not vim.g.vscode)
+        and (vim.loop.os_uname().sysname == "Darwin")
+        and (os.getenv("SSH_CONNECTION") == nil)
     end,
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
