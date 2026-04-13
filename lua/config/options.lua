@@ -62,43 +62,45 @@ local severity_highlights = {
   [vim.diagnostic.severity.HINT] = "DiagnosticHint",
 }
 
--- Auto-show diagnostics when cursor is on error line
-vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
-  callback = function()
-    local now = vim.loop and vim.loop.hrtime and vim.loop.hrtime()
-    local suppress_until = vim.g.__hover_message_suppress_until
-    if suppress_until and now then
-      if suppress_until > now then
+-- Auto-show diagnostics when cursor is on error line (skip in VSCode)
+if not vim.g.vscode then
+  vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
+    callback = function()
+      local now = vim.loop and vim.loop.hrtime and vim.loop.hrtime()
+      local suppress_until = vim.g.__hover_message_suppress_until
+      if suppress_until and now then
+        if suppress_until > now then
+          return
+        else
+          vim.g.__hover_message_suppress_until = nil
+        end
+      end
+
+      local cursor_position = vim.api.nvim_win_get_cursor(0)
+      local diagnostics = vim.diagnostic.get(0, { lnum = cursor_position[1] - 1 })
+
+      if #diagnostics == 0 then
+        vim.api.nvim_echo({{ "", "Normal" }}, false, {})
         return
-      else
-        vim.g.__hover_message_suppress_until = nil
       end
-    end
 
-    local cursor_position = vim.api.nvim_win_get_cursor(0)
-    local diagnostics = vim.diagnostic.get(0, { lnum = cursor_position[1] - 1 })
+      local chunks = {}
+      for index, diagnostic in ipairs(diagnostics) do
+        local label = severity_labels[diagnostic.severity] or "Info"
+        local message = diagnostic.message:gsub("\n", " ")
+        local highlight = severity_highlights[diagnostic.severity] or "DiagnosticInfo"
 
-    if #diagnostics == 0 then
-      vim.api.nvim_echo({{ "", "Normal" }}, false, {})
-      return
-    end
+        table.insert(chunks, { string.format("%s: %s", label, message), highlight })
 
-    local chunks = {}
-    for index, diagnostic in ipairs(diagnostics) do
-      local label = severity_labels[diagnostic.severity] or "Info"
-      local message = diagnostic.message:gsub("\n", " ")
-      local highlight = severity_highlights[diagnostic.severity] or "DiagnosticInfo"
-
-      table.insert(chunks, { string.format("%s: %s", label, message), highlight })
-
-      if index < #diagnostics then
-        table.insert(chunks, { "  |  ", "Normal" })
+        if index < #diagnostics then
+          table.insert(chunks, { "  |  ", "Normal" })
+        end
       end
-    end
 
-    vim.api.nvim_echo(chunks, false, {})
-  end
-})
+      vim.api.nvim_echo(chunks, false, {})
+    end
+  })
+end
 
 -- Graphics and theming
 -- Background setting is now managed by autocmds for persistence
