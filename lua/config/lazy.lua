@@ -108,15 +108,36 @@ require("lazy").setup({
     cond = not vim.g.vscode,
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
-      require("lualine").setup({
+      local opts = {
         options = {
-          theme = "solarized_light",
+          theme = "auto",
         },
         sections = {
           lualine_c = {
             { "filename", path = 4 },
           },
         },
+      }
+      require("lualine").setup(opts)
+      -- lualine caches the resolved auto theme; clear those modules and
+      -- re-run setup so it re-derives colors from the current theme/background.
+      local function reload_lualine_theme()
+        for k in pairs(package.loaded) do
+          if k:match("^lualine%.themes%.") then
+            package.loaded[k] = nil
+          end
+        end
+        require("lualine").setup(opts)
+      end
+      local group = vim.api.nvim_create_augroup("LualineRetheme", { clear = true })
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        group = group,
+        callback = reload_lualine_theme,
+      })
+      vim.api.nvim_create_autocmd("OptionSet", {
+        group = group,
+        pattern = "background",
+        callback = reload_lualine_theme,
       })
     end,
   },

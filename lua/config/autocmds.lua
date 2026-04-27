@@ -79,38 +79,13 @@ autocmd("BufReadPost", {
 -- Save and restore colorscheme and background
 local theme_file = vim.fn.stdpath("data") .. "/theme.txt"
 
--- Load saved colorscheme and background on startup (skip in VSCode)
-autocmd("VimEnter", {
-  group = augroup("RestoreTheme", { clear = true }),
-  callback = function()
-    if vim.g.vscode then
-      return
-    end
-    
-    local file = io.open(theme_file, "r")
-    if file then
-      local colorscheme = file:read("*line")
-      local background = file:read("*line")
-      file:close()
-      
-      if background and (background == "light" or background == "dark") then
-        vim.opt.background = background
-      end
-      
-      if colorscheme and colorscheme ~= "" then
-        vim.cmd("colorscheme " .. colorscheme)
-      else
-        vim.cmd("colorscheme onehalfdark")  -- fallback
-      end
-    else
-      vim.cmd("colorscheme onehalfdark")  -- fallback
-    end
-  end,
-  desc = "Restore last used colorscheme and background",
-})
+-- Plugin setup (e.g. solarized.nvim with variant='summer') can flip background
+-- around VimEnter time and fire OptionSet/ColorScheme, which would clobber the
+-- saved file before RestoreTheme reads it. Suppress saves until restore runs.
+local theme_restored = false
 
--- Save colorscheme and background when either changes
 local function save_theme()
+  if not theme_restored then return end
   local file = io.open(theme_file, "w")
   if file then
     file:write((vim.g.colors_name or "onehalfdark") .. "\n")
@@ -119,10 +94,50 @@ local function save_theme()
   end
 end
 
+-- Load saved colorscheme and background on startup (skip in VSCode).
+-- nested = true so the colorscheme command fires ColorScheme, which is needed for
+-- lualine (and other listeners) to pick up the restored theme.
+autocmd("VimEnter", {
+  group = augroup("RestoreTheme", { clear = true }),
+  nested = true,
+  callback = function()
+    if vim.g.vscode then
+      return
+    end
+
+    local target = "onehalfdark"
+    local saved_background
+    local file = io.open(theme_file, "r")
+    if file then
+      local colorscheme = file:read("*line")
+      local background = file:read("*line")
+      file:close()
+
+      if background == "light" or background == "dark" then
+        saved_background = background
+      end
+      if colorscheme and colorscheme ~= "" then
+        target = colorscheme
+      end
+    end
+
+    if not pcall(vim.cmd, "colorscheme " .. target) then
+      pcall(vim.cmd, "colorscheme onehalfdark")
+    end
+    if saved_background then
+      vim.opt.background = saved_background
+    end
+    theme_restored = true
+    save_theme()
+  end,
+  desc = "Restore last used colorscheme and background",
+})
+
+-- Catch colorscheme/background changes from any source (e.g. :colorscheme)
 autocmd("ColorScheme", {
   group = augroup("SaveTheme", { clear = true }),
   callback = save_theme,
-  desc = "Save current colorscheme and background",
+  desc = "Save current colorscheme",
 })
 
 autocmd("OptionSet", {
@@ -132,7 +147,16 @@ autocmd("OptionSet", {
   desc = "Save background setting when changed",
 })
 
--- Theme toggles (persist via existing autocmds)
+-- Final safety net: persist whatever state we end up in
+autocmd("VimLeavePre", {
+  group = augroup("SaveTheme", { clear = false }),
+  callback = function()
+    if not vim.g.vscode then save_theme() end
+  end,
+  desc = "Save theme on exit",
+})
+
+-- Theme toggles (also save explicitly, in case nested autocmds are suppressed)
 do
   local themes = { "solarized", "everforest", "nord", "onehalfdark" }
 
@@ -144,13 +168,16 @@ do
     end
     for step = 1, #themes do
       local j = ((idx + step - 1) % #themes) + 1
-      local ok = pcall(vim.cmd, "colorscheme " .. themes[j])
-      if ok then return end
+      if pcall(vim.cmd, "colorscheme " .. themes[j]) then
+        save_theme()
+        return
+      end
     end
   end
 
   local function toggle_background()
     vim.opt.background = (vim.o.background == "light") and "dark" or "light"
+    save_theme()
   end
 
   vim.api.nvim_create_user_command("ThemeCycle", cycle_theme, { desc = "Cycle through preferred themes" })
