@@ -290,6 +290,34 @@ require("lazy").setup({
     end,
   },
 
+  {
+    "sindrets/diffview.nvim",
+    cond = not vim.g.vscode,
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cmd = { "DiffviewOpen", "DiffviewClose", "DiffviewToggleFiles", "DiffviewFocusFiles", "DiffviewFileHistory" },
+    init = function()
+      vim.keymap.set("n", "<leader>gd", function()
+        local actions = require("telescope.actions")
+        local action_state = require("telescope.actions.state")
+        require("telescope.builtin").git_commits({
+          attach_mappings = function(prompt_bufnr, _)
+            actions.select_default:replace(function()
+              local selection = action_state.get_selected_entry()
+              actions.close(prompt_bufnr)
+              if selection and selection.value then
+                vim.cmd("DiffviewOpen " .. selection.value)
+              end
+            end)
+            return true
+          end,
+        })
+      end, { desc = "Diffview: pick commit to compare against working tree" })
+    end,
+    config = function()
+      require("diffview").setup()
+    end,
+  },
+
   -- TypeScript ergonomics (uses typescript-language-server under the hood)
   {
     "pmizio/typescript-tools.nvim",
