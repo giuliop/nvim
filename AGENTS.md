@@ -32,8 +32,10 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
   - `mason-lspconfig.nvim`: Bridge between Mason and lspconfig
   - `nvim-lspconfig`: LSP client configurations
 - **TypeScript Tools**: Enhanced TypeScript development with `typescript-tools.nvim`
+- **nvim-cmp**: Completion engine with LSP, LuaSnip, and buffer sources
 - **GitHub Copilot**: AI-powered code completion
-- **Markdown Preview**: Live markdown preview with `markdown-preview.nvim`
+- **Diffview**: Git diff/history views integrated with Telescope commit selection
+- **Markdown Preview**: Live markdown preview with `markdown-preview.nvim` on macOS only, when not running over SSH
 - **Language servers**: lua_ls, ts_ls, pyright, gopls (auto-installed via Mason)
 
 ### UI/Theme
@@ -41,7 +43,7 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 - **everforest**: Alternative theme option
 - **nord.nvim**: Alternative theme option
 - **onehalf**: Alternative theme with onehalfdark fallback
-- **lualine.nvim**: Status line with solarized_light theme
+- **lualine.nvim**: Status line with automatic theme detection and configured filename path display
 - **nvim-web-devicons**: File type icons
 
 ## Key Mappings
@@ -49,6 +51,7 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 ### Leader Key: `<Space>`
 
 **File Operations:**
+- `<leader><Space>` - Clear search highlight
 - `<leader>ff` - Find files (Telescope)
 - `<leader>fg` - Live grep search
 - `<leader>fb` - Browse buffers
@@ -66,6 +69,12 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 **Terminal:**
 - `<leader>r` - Open bash terminal in vertical split
 - Python files: `<leader>r` - Run current Python file interactively
+
+**Git:**
+- `<leader>gd` - Pick a Git commit with Telescope and open Diffview against the working tree
+
+**AI Assistance:**
+- `<leader>i` - Toggle GitHub Copilot
 
 **Theme Management:**
 - `<leader>tt` - Cycle through themes (solarized, everforest, nord, onehalfdark)
@@ -91,6 +100,8 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 ### Insert Mode
 - `Ctrl+W` - Delete previous word
 - `Ctrl+U` - Delete to start of line
+- `Ctrl+s` - Save and clear search highlight
+- Completion menu: `Ctrl+n`/`Ctrl+p` select items, `Ctrl+Space` opens completion, `Ctrl+e` aborts, `Ctrl+d`/`Ctrl+f` scroll docs, `Enter` confirms
 
 ### Visual Mode
 - `<` - Indent left and reselect
@@ -125,6 +136,8 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 :LspInfo
 ```
 
+`mason-lspconfig` ensures `lua_ls`, `ts_ls`, `pyright`, and `gopls` are installed. It excludes `ts_ls` from automatic enabling because `typescript-tools.nvim` owns TypeScript setup.
+
 ### File Tree
 ```bash
 # Toggle file explorer
@@ -152,6 +165,8 @@ s    # Open file in horizontal split
 :MarkdownPreviewToggle
 ```
 
+Markdown preview is only loaded on macOS with a local display and is skipped in VSCode or SSH sessions.
+
 ## Development Workflow
 
 ### Typical Editing Session
@@ -165,16 +180,17 @@ s    # Open file in horizontal split
 ### Plugin Development
 - Plugins are lazy-loaded based on events or file types
 - VSCode integration: Many plugins disabled when `vim.g.vscode` is set
+- Telescope find-files includes hidden files, follows symlinks, and does not respect ignore files, while still filtering `.git/` and `node_modules`
 - Configuration changes require `:source` or restart
 
 ## Important Behaviors
 
 ### Auto-commands
-- Trailing whitespace automatically removed on save
+- Trailing whitespace automatically removed on save, except in Markdown files
 - Cursor position restored when reopening files
 - Python files get special terminal runner keybind
 - Go files automatically formatted with LSP on save (with import organization)
-- Colorscheme and background automatically saved and restored across sessions
+- Colorscheme and background automatically saved and restored across sessions after startup theme restoration
 - Auto-display diagnostics when cursor hovers over error lines
 
 ### Editor Preferences
