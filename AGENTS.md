@@ -16,6 +16,12 @@ It is very important that any changes made work on both platforms.
 
 Moreover, it detects if running inside VSCode and disables certain plugins accordingly.
 
+nvim-treesitter is on the `main` branch, which requires Neovim 0.12+ and the
+standalone `tree-sitter` CLI to compile parsers. This must be installed on every
+machine: macOS `brew install tree-sitter-cli` (note: the `tree-sitter` formula is
+only the library); Linux via the distro package, `cargo install tree-sitter-cli`,
+or `npm install -g tree-sitter-cli`.
+
 ## Plugin Architecture
 
 The configuration uses lazy.nvim for plugin management with these key plugins:
@@ -23,6 +29,7 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 ### Core Functionality
 - **nvim-surround**: Text object manipulation for quotes/brackets/tags
 - **unimpaired.nvim**: Bracket mappings for navigation and toggling
+- **nvim-treesitter** (`main` branch): AST-based syntax highlighting, richer than the built-in regex syntax (which, e.g., does not highlight Go builtin types/functions). Parsers are listed via `install()` and highlighting is enabled with `vim.treesitter.start()` in a FileType autocmd. Requires the `tree-sitter` CLI (see Compatibility).
 - **nvim-tree.lua**: File explorer sidebar (`<leader>2` to toggle)
 - **telescope.nvim**: Fuzzy finder with FZF integration for files, grep, buffers
 

@@ -29,6 +29,36 @@ require("lazy").setup({
     end,
   },
 
+  -- Treesitter syntax highlighting (AST-based; richer than built-in regex
+  -- syntax, which doesn't highlight Go builtin types/funcs, etc.).
+  -- Uses the rewritten "main" branch, which requires Neovim 0.12+.
+  {
+    "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    cond = not vim.g.vscode,
+    lazy = false,
+    build = ":TSUpdate",
+    config = function()
+      -- Parsers to keep installed (install() is async; first run downloads
+      -- in the background, so highlighting appears after reopening the file).
+      require("nvim-treesitter").install({
+        "go", "gomod", "gowork", "gosum",
+        "lua", "python", "typescript", "tsx", "javascript",
+        "json", "yaml", "toml", "bash",
+        "markdown", "markdown_inline", "vim", "vimdoc",
+      })
+
+      -- Enable treesitter highlighting for any buffer whose parser is
+      -- installed. pcall keeps filetypes without a parser quiet.
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("TreesitterHighlight", { clear = true }),
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
+    end,
+  },
+
   {
     "nvim-tree/nvim-tree.lua",
     cond = not vim.g.vscode,
