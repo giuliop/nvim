@@ -92,7 +92,6 @@ require("lazy").setup({
   {
     "nvim-telescope/telescope.nvim",
     cond = not vim.g.vscode,
-    tag = "0.1.8",
     dependencies = {
       "nvim-lua/plenary.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" }
@@ -215,8 +214,9 @@ require("lazy").setup({
     end,
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
-    build = function()
-      vim.fn["mkdp#util#install"]()
+    build = function(plugin)
+      vim.cmd("source " .. vim.fn.fnameescape(plugin.dir .. "/autoload/mkdp/util.vim"))
+      vim.fn["mkdp#util#install_sync"](true)
     end,
     config = function()
       vim.g.mkdp_browser = 'Google Chrome'

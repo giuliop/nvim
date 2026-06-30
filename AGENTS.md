@@ -22,6 +22,12 @@ machine: macOS `brew install tree-sitter-cli` (note: the `tree-sitter` formula i
 only the library); Linux via the distro package, `cargo install tree-sitter-cli`,
 or `npm install -g tree-sitter-cli`.
 
+Because nvim-treesitter is on `main`, Telescope must track a version that uses
+Neovim's current Treesitter API (`vim.treesitter.language.get_lang()` and
+`vim.treesitter.start()`). Do not pin Telescope to `0.1.8` unless Telescope
+Treesitter previews are disabled, because that tag calls the removed
+`nvim-treesitter.parsers.ft_to_lang()` helper.
+
 ## Plugin Architecture
 
 The configuration uses lazy.nvim for plugin management with these key plugins:
@@ -173,6 +179,9 @@ s    # Open file in horizontal split
 ```
 
 Markdown preview is only loaded on macOS with a local display and is skipped in VSCode or SSH sessions.
+Its lazy.nvim build hook explicitly sources `autoload/mkdp/util.vim` from the
+plugin directory before calling `mkdp#util#install_sync(true)`; this avoids
+autoload timing failures during `:Lazy sync`.
 
 ## Development Workflow
 
