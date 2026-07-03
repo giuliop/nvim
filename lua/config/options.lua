@@ -35,7 +35,7 @@ opt.scrolloff = 3                 -- Minimum lines above/below cursor
 -- Other useful settings
 opt.startofline = false          -- Don't jump to first character with page commands
 opt.updatetime = 300             -- Faster completion and diagnostics (default 4000ms)
-opt.timeoutlen = 400             -- Faster mapped sequence timeout
+opt.timeoutlen = 700             -- Faster mapped sequence timeout (default 1000ms)
 
 vim.diagnostic.config({
   float = {
