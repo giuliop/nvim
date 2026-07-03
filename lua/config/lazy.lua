@@ -202,6 +202,9 @@ require("lazy").setup({
   {
     "github/copilot.vim",
     cond = not vim.g.vscode,
+    init = function()
+      vim.g.copilot_enabled = 0
+    end,
   },
 
   {
