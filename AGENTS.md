@@ -105,6 +105,8 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 - `Ctrl+h/j/k/l` - Window navigation
 - `Ctrl+s` - Save and clear search highlight
 - Arrow keys - Window resizing (left/right: width, up/down: height)
+- `zi` - In diff windows, add 10 visible context lines; elsewhere, toggle folding normally
+- `zr` - In diff windows, reset context to the default 6 lines; elsewhere, reduce folding normally
 
 ### Terminal Mode
 - `Esc` - Exit terminal mode
@@ -197,6 +199,7 @@ autoload timing failures during `:Lazy sync`.
 - Plugins are lazy-loaded based on events or file types
 - VSCode integration: Many plugins disabled when `vim.g.vscode` is set
 - Telescope find-files includes hidden files, follows symlinks, and does not respect ignore files, while still filtering `.git/` and `node_modules`
+- Diffview's default buffer-local `zi` and `zr` mappings are disabled so the conditional diff-context mappings remain active
 - Configuration changes require `:source` or restart
 
 ## Important Behaviors

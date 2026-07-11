@@ -368,7 +368,14 @@ require("lazy").setup({
       end, { desc = "Diffview: pick commit to compare against working tree" })
     end,
     config = function()
-      require("diffview").setup()
+      require("diffview").setup({
+        keymaps = {
+          view = {
+            ["zi"] = false,
+            ["zr"] = false,
+          },
+        },
+      })
     end,
   },
 

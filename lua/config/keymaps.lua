@@ -64,6 +64,52 @@ if not vim.g.vscode then
   keymap("n", "<leader>i", toggle_copilot, { desc = "Toggle Copilot" })
 end
 
+-- Diff context controls
+local function get_diff_context()
+  for _, option in ipairs(vim.opt.diffopt:get()) do
+    local value = option:match("^context:(%d+)$")
+    if value then
+      return tonumber(value)
+    end
+  end
+
+  return 6
+end
+
+local function set_diff_context(context)
+  local options = vim.tbl_filter(function(option)
+    return not option:match("^context:%d+$")
+  end, vim.opt.diffopt:get())
+
+  if context then
+    options[#options + 1] = "context:" .. context
+  end
+
+  vim.opt.diffopt = options
+  vim.cmd.diffupdate()
+end
+
+if not vim.g.vscode then
+  keymap("n", "zi", function()
+    if vim.wo.diff then
+      local context = get_diff_context() + 10
+      set_diff_context(context)
+      vim.notify(("Diff context: %d lines"):format(context))
+    else
+      vim.cmd("normal! zi")
+    end
+  end, { desc = "Expand diff context or toggle folds" })
+
+  keymap("n", "zr", function()
+    if vim.wo.diff then
+      set_diff_context(nil)
+      vim.notify("Diff context reset to 6 lines")
+    else
+      vim.cmd("normal! zr")
+    end
+  end, { desc = "Reset diff context or reduce folds" })
+end
+
 -- Leader key mappings
 keymap("n", "<leader><Space>", ":noh<CR>", { desc = "Clear search highlight" })
 keymap("n", "<leader>n", ":vne<CR>", { desc = "Open new file in vertical split" })
