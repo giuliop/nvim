@@ -64,8 +64,41 @@ local severity_highlights = {
 
 -- Auto-show diagnostics when cursor is on error line (skip in VSCode)
 if not vim.g.vscode then
-  vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
+  local diagnostic_message_visible = false
+  local diagnostic_message_suppressed = false
+  local diagnostic_message_group = vim.api.nvim_create_augroup("DiagnosticMessages", { clear = true })
+
+  -- A command's output uses the same screen area as diagnostic messages. Leave
+  -- that output alone until the user moves the cursor and asks for new context.
+  vim.api.nvim_create_autocmd("CmdlineEnter", {
+    group = diagnostic_message_group,
     callback = function()
+      diagnostic_message_visible = false
+      diagnostic_message_suppressed = true
+    end,
+    desc = "Preserve command output from automatic diagnostics",
+  })
+
+  vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+    group = diagnostic_message_group,
+    callback = function()
+      diagnostic_message_suppressed = false
+
+      if diagnostic_message_visible then
+        vim.api.nvim_echo({ { "", "Normal" } }, false, {})
+        diagnostic_message_visible = false
+      end
+    end,
+    desc = "Clear an automatic diagnostic after moving away",
+  })
+
+  vim.api.nvim_create_autocmd({"CursorHold", "CursorHoldI"}, {
+    group = diagnostic_message_group,
+    callback = function()
+      if diagnostic_message_suppressed then
+        return
+      end
+
       local now = vim.loop and vim.loop.hrtime and vim.loop.hrtime()
       local suppress_until = vim.g.__hover_message_suppress_until
       if suppress_until and now then
@@ -80,7 +113,6 @@ if not vim.g.vscode then
       local diagnostics = vim.diagnostic.get(0, { lnum = cursor_position[1] - 1 })
 
       if #diagnostics == 0 then
-        vim.api.nvim_echo({{ "", "Normal" }}, false, {})
         return
       end
 
@@ -98,7 +130,9 @@ if not vim.g.vscode then
       end
 
       vim.api.nvim_echo(chunks, false, {})
-    end
+      diagnostic_message_visible = true
+    end,
+    desc = "Show diagnostics for the current line",
   })
 end
 

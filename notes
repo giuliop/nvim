@@ -1,1 +1,3 @@
 `gf` to open file in new tab from DiffView
+
+Hold `Option (⌥)` while dragging in iTerm2 to select terminal text when Neovim mouse reporting is enabled, then press `Command (⌘) + C` to copy it.
