@@ -85,6 +85,7 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 
 **Git:**
 - `<leader>gd` - Pick a Git commit with Telescope and open Diffview against the working tree
+- `<leader>gr` - Open the current Codex `review-pr` worktree diff in Diffview
 
 **AI Assistance:**
 - `<leader>i` - Toggle GitHub Copilot
@@ -141,6 +142,19 @@ The configuration uses lazy.nvim for plugin management with these key plugins:
 # Plugin status and management UI
 :Lazy
 ```
+
+### Codex PR Reviews
+```vim
+:ReviewCodexDiff
+```
+
+`<leader>gr` and `:ReviewCodexDiff` locate the
+`refs/codex/review/pr-*/head` ref pointing at the current `HEAD`, derive its
+matching `base` ref, and open the complete `base...HEAD` PR diff in Diffview.
+They work from detached worktrees created by the Codex `review-pr` skill and do
+not require checking out the contributor's branch. The mapping uses the Git
+prefix because `<leader>r` is already the terminal/Python runner; adding a
+longer `<leader>rd` mapping would delay that existing shortcut.
 
 ### LSP Management
 ```bash

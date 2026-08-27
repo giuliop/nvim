@@ -359,13 +359,55 @@ require("lazy").setup({
               local selection = action_state.get_selected_entry()
               actions.close(prompt_bufnr)
               if selection and selection.value then
-                vim.cmd("DiffviewOpen " .. selection.value)
+                vim.cmd({ cmd = "DiffviewOpen", args = { selection.value } })
               end
             end)
             return true
           end,
         })
       end, { desc = "Diffview: pick commit to compare against working tree" })
+
+      local function open_codex_review_diff()
+        local head_refs = vim.fn.systemlist({
+          "git",
+          "for-each-ref",
+          "--format=%(refname)",
+          "--points-at=HEAD",
+          "refs/codex/review/pr-*/head",
+        })
+
+        if vim.v.shell_error ~= 0 then
+          vim.notify("Unable to inspect Codex review refs in this Git repository", vim.log.levels.ERROR)
+          return
+        end
+        head_refs = vim.tbl_filter(function(ref)
+          return ref:match("^refs/codex/review/pr%-%d+/head$") ~= nil
+        end, head_refs)
+        if #head_refs == 0 then
+          vim.notify("Current HEAD is not a Codex review PR head", vim.log.levels.WARN)
+          return
+        end
+        if #head_refs > 1 then
+          vim.notify("Multiple Codex review refs point at HEAD", vim.log.levels.ERROR)
+          return
+        end
+
+        local base_ref = head_refs[1]:gsub("/head$", "/base")
+        vim.fn.system({ "git", "rev-parse", "--verify", "--quiet", base_ref .. "^{commit}" })
+        if vim.v.shell_error ~= 0 then
+          vim.notify("Missing Codex review base ref: " .. base_ref, vim.log.levels.ERROR)
+          return
+        end
+
+        vim.cmd({ cmd = "DiffviewOpen", args = { base_ref .. "...HEAD" } })
+      end
+
+      vim.api.nvim_create_user_command("ReviewCodexDiff", open_codex_review_diff, {
+        desc = "Open the current Codex review-pr diff in Diffview",
+      })
+      vim.keymap.set("n", "<leader>gr", open_codex_review_diff, {
+        desc = "Diffview: open current Codex review PR",
+      })
     end,
     config = function()
       require("diffview").setup({
