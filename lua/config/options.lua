@@ -36,6 +36,8 @@ opt.scrolloff = 3                 -- Minimum lines above/below cursor
 opt.startofline = false          -- Don't jump to first character with page commands
 opt.updatetime = 300             -- Faster completion and diagnostics (default 4000ms)
 opt.timeoutlen = 700             -- Faster mapped sequence timeout (default 1000ms)
+opt.diffopt:remove("linematch:40")
+opt.diffopt:append("linematch:100") -- Align larger diff hunks while keeping updates responsive
 
 vim.diagnostic.config({
   float = {
