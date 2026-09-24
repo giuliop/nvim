@@ -4,6 +4,21 @@ local opt = vim.opt
 opt.mouse = "a"                   -- Enable mouse mode
 opt.undofile = true               -- Enable persistent undo
 opt.clipboard = "unnamedplus"     -- Use system clipboard for yank/paste
+
+-- Over SSH/ET, pbcopy/xclip would target the remote machine's clipboard, so
+-- copy via OSC 52 to reach the local terminal instead. Paste reads the unnamed
+-- register because OSC 52 reads are widely unsupported (and blocked by tmux).
+if os.getenv("SSH_CONNECTION") and not vim.g.vscode then
+    local osc52 = require("vim.ui.clipboard.osc52")
+    local function paste()
+        return { vim.split(vim.fn.getreg(""), "\n"), vim.fn.getregtype("") }
+    end
+    vim.g.clipboard = {
+        name = "OSC 52",
+        copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+        paste = { ["+"] = paste, ["*"] = paste },
+    }
+end
 opt.confirm = true                -- Confirm to save changes on exit
 
 -- Indentation and formatting
