@@ -204,6 +204,8 @@ require("lazy").setup({
     cond = not vim.g.vscode,
     init = function()
       vim.g.copilot_enabled = 0
+      -- Use the server bundled with the plugin instead of fetching it via npx.
+      vim.g.copilot_version = false
     end,
   },
 
