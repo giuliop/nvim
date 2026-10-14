@@ -448,11 +448,9 @@ require("lazy").setup({
   ui = {
     border = "rounded",
   },
-  -- Check for plugin updates daily and notify; apply them with :Lazy update.
+  -- Update plugins manually with :Lazy update.
   checker = {
-    enabled = true,
-    notify = true,
-    frequency = 86400,
+    enabled = false,
   },
   performance = {
     rtp = {
